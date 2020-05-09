@@ -5,6 +5,5 @@ cache:
     - node_modules/
 
 Test Node Application:
-  image: node:latest-alpine
-  script:
-    - npm i
+  image: node:alpine
+  script: npm i
