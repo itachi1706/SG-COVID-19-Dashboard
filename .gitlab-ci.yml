@@ -5,12 +5,14 @@ cache:
     - node_modules/
 
 stages:
+  - build
   - test
   - dockerbuild
 
 include:
   - template: SAST.gitlab-ci.yml
   - template: License-Scanning.gitlab-ci.yml
+  - template: Container-Scanning.gitlab-ci.yml
 
 workflow:
   rules:
@@ -29,6 +31,8 @@ Docker Master:
   stage: dockerbuild
   services:
     - docker:dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -47,12 +51,28 @@ Build Docker:
   stage: dockerbuild
   services:
     - docker:dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker build --pull -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
   rules:
     - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
       when: never
     - when: always
+
+Container Scan Docker:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
