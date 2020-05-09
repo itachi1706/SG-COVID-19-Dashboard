@@ -1,0 +1,9 @@
+image: alpine:latest
+
+cache:
+  paths:
+    - node_modules/
+
+Test Node Application:
+  image: node:alpine
+  script: npm i
