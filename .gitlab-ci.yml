@@ -4,6 +4,51 @@ cache:
   paths:
     - node_modules/
 
+stages:
+  - test
+  - dockerbuild
+
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH
+
 Test Node Application:
   image: node:alpine
   script: npm i
+
+# Build docker containers
+Docker Master:
+  # Official docker image.
+  image: docker:latest
+  stage: dockerbuild
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: always
+    - when: never
+
+Build Docker:
+  # Official docker image.
+  image: docker:latest
+  stage: dockerbuild
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: never
+    - when: always
