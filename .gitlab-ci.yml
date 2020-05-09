@@ -10,6 +10,7 @@ stages:
 
 include:
   - template: SAST.gitlab-ci.yml
+  - template: License-Scanning.gitlab-ci.yml
 
 workflow:
   rules:
