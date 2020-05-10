@@ -23,9 +23,13 @@ html
                             a.dropdown-item(href="#") Something else here
                     li.nav-item
                         a.nav-link.disabled(href="#") Disabled
-                form.form-inline.my-2.my-lg-0
-                    input.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
-                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+                if loggedIn
+                    .my-2.my-lg-0.form-inline#loggedin
+                        span Welcome! #{username}
+                        a.nav-link(href="#") Logout
+                else
+                    .my-2.my-lg-0#loggedout
+                        a.nav-link(href="#") Login
 
         .largepadding
             block content

@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/navbartest', function (req, res) {
-  res.render('test-navbar');
+  res.render('test-navbar', { username: 'Test', loggedIn: true });
 });
 
 module.exports = router;
