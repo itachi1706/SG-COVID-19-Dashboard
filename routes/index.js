@@ -7,7 +7,17 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/navbartest', function (req, res) {
-  res.render('test-navbar', { username: 'Test', loggedIn: true });
+  let loggedin = (req.query.log === '1');
+  console.log(loggedin);
+  res.render('test-navbar', { username: 'Test', loggedIn: loggedin });
+});
+
+router.get('/login', function (req, res) {
+  res.redirect('/navbartest?log=1');
+});
+
+router.get('/logout', function (req, res) {
+  res.redirect('/navbartest');
 });
 
 module.exports = router;

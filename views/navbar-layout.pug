@@ -39,10 +39,10 @@ html
                 if loggedIn
                     .my-2.my-lg-0.form-inline
                         span.navbar-text.mr-2.text-white Logged in as #{username}
-                        a.nav-item.nav-link.btn.btn-danger(href='#') Logout
+                        a.nav-item.nav-link.btn.btn-danger(href='/logout') Logout
                 else
                     .my-2.my-lg-0
-                        a.nav-item.nav-link.btn.btn-light(href='#') Login
+                        a.nav-item.nav-link.btn.btn-light(href='/login') Login
 
         .largepadding
             block content
