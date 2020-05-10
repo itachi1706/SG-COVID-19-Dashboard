@@ -3,8 +3,8 @@ html
     head
         include metaheader
     body
-        nav.navbar.navbar-expand-lg.navbar-light.bg-light
-            a.navbar-brand(href='#') Navbar
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+            span.navbar-brand.mb-0.h1 COVID-19 Dashboard (SG)
             button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle Navigation')
                 span.navbar-toggler-icon
             .collapse.navbar-collapse#navbarSupportedContent
@@ -13,23 +13,36 @@ html
                         a.nav-link(href="#") Home
                             span.sr-only (current)
                     li.nav-item
-                        a.nav-link(href="#") Link
-                    li.nav-item.dropdown
-                        a.nav-link.dropdown-toggle#navbarDropdown(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
-                        .dropdown-menu(aria-labelledby='navbarDropdown')
-                            a.dropdown-item(href="#") Action
-                            a.dropdown-item(href="#") Another action
-                            .dropdown-divider
-                            a.dropdown-item(href="#") Something else here
+                        a.nav-link(href="#") Case Details (Old)
                     li.nav-item
-                        a.nav-link.disabled(href="#") Disabled
+                        a.nav-link(href="#") Daily Statistics
+                    //li.nav-item
+                        a.nav-link(href="https://covidsitrep.moh.gov.sg/", target="_blank") MOH Situation Report
+                    li.nav-item.dropdown
+                        a.nav-link.dropdown-toggle#navbarDDLGraph(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Graphs
+                        .dropdown-menu(aria-labelledby='navbarDDLGraph')
+                            h6.dropdown-header Cases
+                            a.dropdown-item(href="#") Cumulative
+                            a.dropdown-item(href="#") Confirmed
+                            a.dropdown-item(href="#") Discharged
+                            .dropdown-divider
+                            h6.dropdown-header More Coming Soon
+                            a.dropdown-item.disabled(href="#") Coming Soon!
+                    if loggedIn
+                        li.nav-item.dropdown
+                            a.nav-link.dropdown-toggle#navbarDDLAdm(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Administration
+                            .dropdown-menu(aria-labelledby='navbarDDLAdm')
+                                h6.dropdown-header Data Management
+                                a.dropdown-item(href="#") Add new day
+                                a.dropdown-item(href="#") Edit data
+                                a.dropdown-item(href="#") Export data
                 if loggedIn
-                    .my-2.my-lg-0.form-inline#loggedin
-                        span Welcome! #{username}
-                        a.nav-link(href="#") Logout
+                    .my-2.my-lg-0.form-inline
+                        span.navbar-text.mr-2.text-white Logged in as #{username}
+                        a.nav-item.nav-link.btn.btn-danger(href='#') Logout
                 else
-                    .my-2.my-lg-0#loggedout
-                        a.nav-link(href="#") Login
+                    .my-2.my-lg-0
+                        a.nav-item.nav-link.btn.btn-light(href='#') Login
 
         .largepadding
             block content
