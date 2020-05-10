@@ -1,0 +1,49 @@
+doctype html
+html
+    head
+        include metaheader
+    body
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-primary
+            span.navbar-brand.mb-0.h1 COVID-19 Dashboard (SG)
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle Navigation')
+                span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarSupportedContent
+                ul.navbar-nav.mr-auto
+                    li.nav-item#nbhome
+                        a.nav-link(href="#") Home
+                    li.nav-item#nbcd
+                        a.nav-link(href="#") Case Details (Old)
+                    li.nav-item#nbstats
+                        a.nav-link(href="#") Daily Statistics
+                    //li.nav-item
+                        a.nav-link(href="https://covidsitrep.moh.gov.sg/", target="_blank") MOH Situation Report
+                    li.nav-item.dropdown#nbgraphs
+                        a.nav-link.dropdown-toggle#navbarDDLGraph(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Graphs
+                        .dropdown-menu(aria-labelledby='navbarDDLGraph')
+                            h6.dropdown-header Cases
+                            a.dropdown-item(href="#") Cumulative
+                            a.dropdown-item(href="#") Confirmed
+                            a.dropdown-item(href="#") Discharged
+                            .dropdown-divider
+                            h6.dropdown-header More Coming Soon
+                            a.dropdown-item.disabled(href="#") Coming Soon!
+                    if loggedIn
+                        li.nav-item.dropdown#nbadmin
+                            a.nav-link.dropdown-toggle#navbarDDLAdm(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Administration
+                            .dropdown-menu(aria-labelledby='navbarDDLAdm')
+                                h6.dropdown-header Data Management
+                                a.dropdown-item(href="#") Add new day
+                                a.dropdown-item(href="#") Edit data
+                                a.dropdown-item(href="#") Export data
+                if loggedIn
+                    .my-2.my-lg-0.form-inline
+                        span.navbar-text.mr-2.text-white Logged in as #{username}
+                        a.nav-item.nav-link.btn.btn-danger(href='/logout') Logout
+                else
+                    .my-2.my-lg-0
+                        a.nav-item.nav-link.btn.btn-light(href='/login') Login
+
+        .largepadding
+            block content
+        include metafooter
+        script $(document).ready(function() { $(`#nb#{route}`).toggleClass('active'); })
