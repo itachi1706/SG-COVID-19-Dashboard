@@ -9,16 +9,15 @@ html
                 span.navbar-toggler-icon
             .collapse.navbar-collapse#navbarSupportedContent
                 ul.navbar-nav.mr-auto
-                    li.nav-item.active
+                    li.nav-item#nbhome
                         a.nav-link(href="#") Home
-                            span.sr-only (current)
-                    li.nav-item
+                    li.nav-item#nbcd
                         a.nav-link(href="#") Case Details (Old)
-                    li.nav-item
+                    li.nav-item#nbstats
                         a.nav-link(href="#") Daily Statistics
                     //li.nav-item
                         a.nav-link(href="https://covidsitrep.moh.gov.sg/", target="_blank") MOH Situation Report
-                    li.nav-item.dropdown
+                    li.nav-item.dropdown#nbgraphs
                         a.nav-link.dropdown-toggle#navbarDDLGraph(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Graphs
                         .dropdown-menu(aria-labelledby='navbarDDLGraph')
                             h6.dropdown-header Cases
@@ -29,7 +28,7 @@ html
                             h6.dropdown-header More Coming Soon
                             a.dropdown-item.disabled(href="#") Coming Soon!
                     if loggedIn
-                        li.nav-item.dropdown
+                        li.nav-item.dropdown#nbadmin
                             a.nav-link.dropdown-toggle#navbarDDLAdm(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Administration
                             .dropdown-menu(aria-labelledby='navbarDDLAdm')
                                 h6.dropdown-header Data Management
@@ -47,3 +46,4 @@ html
         .largepadding
             block content
         include metafooter
+        script $(document).ready(function() { $(`#nb#{route}`).toggleClass('active'); })

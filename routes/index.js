@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 router.get('/navbartest', function (req, res) {
   let loggedin = (req.query.log === '1');
   console.log(loggedin);
-  res.render('test-navbar', { username: 'Test', loggedIn: loggedin });
+  res.render('test-navbar', { username: 'Test', loggedIn: loggedin, route: 'cd' });
 });
 
 router.get('/login', function (req, res) {
