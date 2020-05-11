@@ -116,13 +116,14 @@ Container Scan Docker:
 
 # Deploy to heroku manually
 Deploy to Heroku Prod:
-  image: ruby:slim
+  image: ruby:alpine
   stage: deploy
   dependencies:
     - Test Node Application
   variables:
     MY_APP: ccn-covid19-sg-dashboard
   before_script:
+    - apk add git
     - gem install dpl
     - echo "Deploying to Heroku"
   script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
