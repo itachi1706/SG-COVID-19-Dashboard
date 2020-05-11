@@ -7,7 +7,7 @@ cache:
 stages:
   - build
   - test
-  - dockerbuild
+  - deploy
 
 # GitLab-CI Security Scans
 include:
@@ -61,7 +61,9 @@ Test Node Application:
 Docker Master:
   # Official docker image.
   image: docker:latest
-  stage: dockerbuild
+  stage: deploy
+  dependencies:
+    - Test Node Application
   services:
     - docker:dind
   variables:
@@ -81,7 +83,9 @@ Docker Master:
 Build Docker:
   # Official docker image.
   image: docker:latest
-  stage: dockerbuild
+  stage: deploy
+  dependencies:
+    - Test Node Application
   services:
     - docker:dind
   variables:
@@ -109,3 +113,22 @@ Container Scan Docker:
   script:
     - docker build --pull -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+
+# Deploy to heroku manually
+Deploy to Heroku Prod:
+  image: ruby:alpine
+  stage: deploy
+  dependencies:
+    - Test Node Application
+  variables:
+    MY_APP: ccn-covid19-sg-dashboard
+  before_script:
+    - gem install dpl
+    - echo "Deploying to Heroku"
+  script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: manual
+    - when: never
