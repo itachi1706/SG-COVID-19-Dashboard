@@ -125,7 +125,7 @@ Deploy to Heroku Prod:
   before_script:
     - gem install dpl
     - echo "Deploying to Heroku"
-  script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
+  script: dpl heroku api --app=$MY_APP --api-key=$HEROKU_KEY
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
