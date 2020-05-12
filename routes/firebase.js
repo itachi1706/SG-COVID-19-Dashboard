@@ -9,3 +9,7 @@ module.exports.firebaseConfig = {
     appId: "1:985951588863:web:ffc796cdd26ec65cb657ca",
     measurementId: "G-WE3YTSB1MJ"
 };
+
+module.exports.getConfigFrontend = function () {
+    return JSON.stringify(exports.firebaseConfig);
+}
