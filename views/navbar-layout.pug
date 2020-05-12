@@ -51,4 +51,7 @@ html
             $(document).ready(function() {
                 $(`#nb#{route}`).toggleClass('active');
                 firebase.initializeApp(firebaseConfig);
+                firebase.auth().onAuthStateChanged(function (user) {
+                    console.log(user);
+                });
             })

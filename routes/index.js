@@ -4,6 +4,19 @@ var router = express.Router();
 var firebaseutil = require('./firebase');
 var firebase = require('firebase');
 
+function checkAuth(req, res, next) {
+  if (req.header.authtoken) {
+    console.log("Auth Check: true");
+    req.loggedin = true;
+  } else {
+    console.log("Auth Check: false");
+    req.loggedin = false;
+  }
+  next();
+}
+
+router.use('/', checkAuth);
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
