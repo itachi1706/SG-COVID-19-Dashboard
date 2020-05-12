@@ -46,4 +46,9 @@ html
         .largepadding
             block content
         include metafooter
-        script $(document).ready(function() { $(`#nb#{route}`).toggleClass('active'); })
+        script.
+            const firebaseConfig = !{fbconfig};
+            $(document).ready(function() {
+                $(`#nb#{route}`).toggleClass('active');
+                firebase.initializeApp(firebaseConfig);
+            })

@@ -3,41 +3,17 @@ extends navbar-layout
 block content
     h1.text-center Login to dashboard
     .text-center.text-warning Authorized users only. If you are not authorized, do not attempt to login!
-    #firebaseui-auth-container.mt-5
-    #loader
-
-    script.
-        $(document).ready(function() {
-            const firebaseConfig = {
-                apiKey: "AIzaSyCkKkEWlAdfVfBoqHaK7lYqmmG9wdzbvmQ",
-                authDomain: "ccn-webapps.firebaseapp.com",
-                databaseURL: "https://ccn-webapps.firebaseio.com",
-                projectId: "ccn-webapps",
-                storageBucket: "ccn-webapps.appspot.com",
-                messagingSenderId: "985951588863",
-                appId: "1:985951588863:web:ffc796cdd26ec65cb657ca",
-                measurementId: "G-WE3YTSB1MJ"
-            };
-            firebase.initializeApp(firebaseConfig);
-            let ui = new firebaseui.auth.AuthUI(firebase.auth());
-            let uiConfig = {
-                callbacks: {
-                    signInSuccessWithAuthResult(authResult, redirectUrl) {
-                        // Successful sign in
-                        return true;
-                    },
-                    uiShown() {
-                        // Widget rendered, hide loader
-
-                        $('#loader').css('display', 'none');
-                        //document.getElementById('loader').style.display = 'none';
-                    }
-                },
-                signInFlow: 'popup',
-                signInSuccessUrl: 'redirecturl',
-                signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
-                tosUrl: '',
-                privacyPolicyUrl: ''
-            };
-            ui.start('#firebaseui-auth-container', uiConfig);
-        })
+    #loginform.mt-5
+        form
+            .form-group.col-6.offset-3
+                label(for='email') Email Address
+                input#email.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email address')
+                small#emailHelp.form-text.text-muted Authorized Emails only
+            .form-group.col-6.offset-3
+                label(for='password') Password
+                input#password.form-control(type='password', placeholder='Password')
+            .text-center
+                button.btn.btn-primary(type='submit') Login
+            .mt-5.pt-5.text-center Authentication provided by
+                br
+                img(src='/images/firebaseauth.png', height='150')
