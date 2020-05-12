@@ -3,17 +3,34 @@ extends navbar-layout
 block content
     h1.text-center Login to dashboard
     .text-center.text-warning Authorized users only. If you are not authorized, do not attempt to login!
-    #loginform.mt-5
-        form
-            .form-group.col-6.offset-3
-                label(for='email') Email Address
-                input#email.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email address')
-                small#emailHelp.form-text.text-muted Authorized Emails only
-            .form-group.col-6.offset-3
-                label(for='password') Password
-                input#password.form-control(type='password', placeholder='Password')
-            .text-center
-                button.btn.btn-primary(type='submit') Login
-            .mt-5.pt-5.text-center Authentication provided by
-                br
-                img(src='/images/firebaseauth.png', height='150')
+    form.mt-5#loginform(action='#', onsubmit='signin(this)')
+        .col-6.offset-3.text-warning#error.text-hide An error occurred
+        .form-group.col-6.offset-3
+            label(for='email') Email Address
+            input#email.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email address', required=true)
+            small#emailHelp.form-text.text-muted Authorized Emails only
+        .form-group.col-6.offset-3
+            label(for='password') Password
+            input#password.form-control(type='password', placeholder='Password', required=true)
+        .text-center
+            button.btn.btn-primary(type='submit') Login
+        .mt-5.pt-5.text-center Authentication provided by
+            br
+            img(src='/images/firebaseauth.png', height='150')
+
+    script.
+        function signin(e) {
+            $('#error').addClass('text-hide');
+            let email = $('#email').val();
+            let password = $('#password').val();
+            console.log(email);
+            console.log(password); // TODO: Remove
+            console.log(firebaseConfig);
+            firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
+                console.log(error);
+                $('#error').removeClass('text-hide').text(error.message);
+            }).then((user) => {
+                console.log(user);
+                window.location.href = '/navbartest';
+            });
+        }

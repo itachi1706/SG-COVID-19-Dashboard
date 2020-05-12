@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var firebaseutil = require('./firebase');
+var firebase = require('firebase');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,6 +21,6 @@ router.get('/logout', function (req, res) {
 
 router.get('/login', function (req, res) {
   res.render('login', { route: '', fbconfig: firebaseutil.getConfigFrontend() })
-})
+});
 
 module.exports = router;
