@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 const frontend = require('./firebase-frontend');
-const {firebase, admin} = require('../config');
 const auth = require('../api/firebase-auth');
 
-function checkAuth(req, res, next) {
-  if (auth.isAuthenticated()) {
+async function checkAuth(req, res, next) {
+  let token = await auth.isAuthenticatedToken(req.cookies.authToken);
+  if (token) {
     console.log("Auth Check: true");
     res.locals.authed = true;
+    res.locals.name = auth.getName(token);
   } else {
     console.log("Auth Check: false");
     res.locals.authed = false;
@@ -24,30 +25,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/navbartest', function (req, res) {
-  res.render('test-navbar', { route: 'cd', username: auth.getName(), loggedIn: res.locals.authed });
-});
-
-router.get('/logout', async function (req, res) {
-  await auth.logout();
-  res.redirect('/navbartest');
+  res.render('test-navbar', { route: 'cd', fbConfig: frontend.getFirebaseConfig(), username: res.locals.name, loggedIn: res.locals.authed });
 });
 
 router.get('/login', function (req, res) {
   let error = '';
   if (req.query.err) error = auth.failErrors[req.query.err];
-  res.render('login', { route: '', errorCode: error, username: auth.getName(), loggedIn: res.locals.authed })
-});
-
-router.post('/login', async function (req, res) {
-  console.log(req.body);
-  console.log("hello");
-  let result = await auth.login(req.body.email, req.body.password);
-  if (result.success) {
-    res.redirect('/navbartest'); // TODO: Replace with redirect url when available
-  } else {
-    let errorCode = auth.convertAuthCodeToError(result.message);
-    res.redirect(`/login?err=${errorCode}`);
-  }
+  res.render('login', { route: '', fbConfig: frontend.getFirebaseConfig(), errorCode: error, username: res.locals.name, loggedIn: res.locals.authed })
 });
 
 module.exports = router;

@@ -38,7 +38,7 @@ html
                 if loggedIn
                     .my-2.my-lg-0.form-inline
                         span.navbar-text.mr-2.text-white Logged in as #{username}
-                        a.nav-item.nav-link.btn.btn-danger(href='/logout') Logout
+                        a.nav-item.nav-link.btn.btn-danger#logout(href='#') Logout
                 else
                     .my-2.my-lg-0
                         a.nav-item.nav-link.btn.btn-light(href='/login') Login
@@ -47,4 +47,24 @@ html
             block content
         include metafooter
         script.
-            $(document).ready(function() { $(`#nb#{route}`).toggleClass('active'); });
+            const firebaseConfig = !{fbConfig};
+            $(document).ready(function() {
+                $(`#nb#{route}`).toggleClass('active');
+                firebase.initializeApp(firebaseConfig);
+                console.log("Initialized Firebase");
+                firebase.auth().onAuthStateChanged(function (user) {
+                    console.log(user);
+                    if (user) user.getIdToken(false).then(function (idToken) {
+                        if (idToken) document.cookie = `authToken=${idToken}; path=/;`;
+                        else document.cookie = 'authToken=; path=/;';
+                    });
+                });
+                $('#logout').click(function (e) {
+                    firebase.auth().signOut().catch(function (err) {
+                        console.log(err);
+                    }).then(function () {
+                        document.cookie = 'authToken=; path=/;';
+                        window.location.reload();
+                    })
+                })
+            })
