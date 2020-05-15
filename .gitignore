@@ -3,3 +3,4 @@ node_modules/
 public/stylesheets/style.css
 public/stylesheets/style.css.map
 routes/config-dev.js
+service-account.json

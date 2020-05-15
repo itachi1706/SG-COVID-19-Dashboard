@@ -12,3 +12,4 @@ Site will be available [here](https://ccn-covid19-sg-dashboard.herokuapp.com/) w
 ```javascript
 module.exports.config = <your firebase config>;
 ```
+* Generate a service account from Project Settings and save the file as __service-account.json__ in the root of the repository folder
