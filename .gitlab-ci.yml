@@ -16,34 +16,29 @@ include:
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
 
-# TODO: Migrate this over to rules when GitLab 13.0 drops on 22 May 2020
 sast:
-  only:
-    refs:
-      - merge_requests
-      - branches
-      - master
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
 
 license_scanning:
-  only:
-    refs:
-      - merge_requests
-      - branches
-      - master
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
 
 container_scanning:
-  only:
-    refs:
-      - merge_requests
-      - branches
-      - master
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
 
 dependency_scanning:
-  only:
-    refs:
-      - merge_requests
-      - branches
-      - master
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
 
 # Workflow Default Settings
 workflow:
