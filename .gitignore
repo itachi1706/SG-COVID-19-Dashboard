@@ -2,3 +2,5 @@ node_modules/
 /views/**/*.html
 public/stylesheets/style.css
 public/stylesheets/style.css.map
+config-dev.js
+service-account.json

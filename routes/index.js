@@ -1,7 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var firebaseutil = require('./firebase');
+const frontend = require('./firebase-frontend');
+const auth = require('../api/firebase-auth');
+
+async function checkAuth(req, res, next) {
+  let token = await auth.isAuthenticatedToken(req.cookies.authToken);
+  if (token) {
+    console.log("Auth Check: true");
+    res.locals.authed = true;
+    res.locals.name = auth.getName(token);
+  } else {
+    console.log("Auth Check: false");
+    res.locals.authed = false;
+  }
+  next();
+}
+
+router.use('/', checkAuth);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -9,17 +25,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/navbartest', function (req, res) {
-  let loggedin = (req.query.log === '1');
-  console.log(loggedin);
-  res.render('test-navbar', { route: 'cd', fbconfig: firebaseutil.getConfigFrontend(), username: 'Test', loggedIn: loggedin });
-});
-
-router.get('/logout', function (req, res) {
-  res.redirect('/navbartest');
+  res.render('test-navbar', { route: 'cd', fbConfig: frontend.getFirebaseConfig(), username: res.locals.name, loggedIn: res.locals.authed });
 });
 
 router.get('/login', function (req, res) {
-  res.render('login', { route: '', fbconfig: firebaseutil.getConfigFrontend() })
-})
+  let error = '';
+  if (req.query.err) error = auth.failErrors[req.query.err];
+  res.render('login', { route: '', fbConfig: frontend.getFirebaseConfig(), errorCode: error, username: res.locals.name, loggedIn: res.locals.authed })
+});
 
 module.exports = router;

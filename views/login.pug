@@ -3,17 +3,39 @@ extends navbar-layout
 block content
     h1.text-center Login to dashboard
     .text-center.text-warning Authorized users only. If you are not authorized, do not attempt to login!
-    #loginform.mt-5
-        form
-            .form-group.col-6.offset-3
-                label(for='email') Email Address
-                input#email.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email address')
-                small#emailHelp.form-text.text-muted Authorized Emails only
-            .form-group.col-6.offset-3
-                label(for='password') Password
-                input#password.form-control(type='password', placeholder='Password')
-            .text-center
-                button.btn.btn-primary(type='submit') Login
-            .mt-5.pt-5.text-center Authentication provided by
-                br
-                img(src='/images/firebaseauth.png', height='150')
+    form.mt-5#loginform
+        .col-6.offset-3.text-warning#error.text-hide= errorCode
+        .form-group.col-6.offset-3
+            label(for='email') Email Address
+            input#email.form-control(type='email', aria-describedby='emailHelp', placeholder='Enter email address', required=true, name="email")
+            small#emailHelp.form-text.text-muted Authorized Emails only
+        .form-group.col-6.offset-3
+            label(for='password') Password
+            input#password.form-control(type='password', placeholder='Password', required=true, name="password")
+        .text-center
+            button.btn.btn-primary(type='submit') Login
+        .mt-5.pt-5.text-center Authentication provided by
+            br
+            img(src='/images/firebaseauth.png', height='150')
+
+    script.
+        $('#loginform').submit(function (e) {
+            e.preventDefault();
+            let email = $('#email').val();
+            let password = $('#password').val();
+            console.log(email);
+            console.log(password); // TODO: Remove
+            firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
+                console.log(error);
+                $('#error').removeClass('text-hide').text(error.message);
+            }).then((user) => {
+                console.log(user);
+                if (user) window.location.href = '/navbartest';
+            });
+        });
+        $(document).ready(function () {
+            let e = $('#error');
+            if (e.html().length !== 0) {
+                e.removeClass('text-hide');
+            }
+        });
