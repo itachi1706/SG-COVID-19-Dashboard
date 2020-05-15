@@ -5,7 +5,16 @@ const admin = require('firebase-admin');
 let firebaseConfig;
 let serviceAccount = require("./service-account.json");
 if(process.env.PRODMODE) {
-    firebaseConfig = process.env.firebaseConfig;
+    firebaseConfig = {
+        apiKey: process.env.fbApi,
+        authDomain: process.env.fbAuthDomain,
+        databaseURL: process.env.fbDatabaseURL,
+        projectId: process.env.fbProjId,
+        storageBucket: process.env.fbStorage,
+        messagingSenderId: process.env.fbMessage,
+        appId: process.env.fbAppId,
+        measurementId: process.env.fbMeasurement
+    };
 }
 else {
     let dev = require('./config-dev');
