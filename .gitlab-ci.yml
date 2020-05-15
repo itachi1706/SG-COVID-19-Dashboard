@@ -35,6 +35,8 @@ container_scanning:
     - when: on_success
 
 dependency_scanning:
+  dependencies:
+    - Install Node Dependencies
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -48,8 +50,9 @@ workflow:
     - if: $CI_COMMIT_BRANCH
 
 # Node.JS Testing
-Test Node Application:
+Install Node Dependencies:
   image: node:alpine
+  stage: build
   script: npm i
 
 # Build docker containers
@@ -58,7 +61,7 @@ Docker Master:
   image: docker:latest
   stage: deploy
   dependencies:
-    - Test Node Application
+    - Install Node Dependencies
   services:
     - docker:dind
   variables:
@@ -80,7 +83,7 @@ Build Docker:
   image: docker:latest
   stage: deploy
   dependencies:
-    - Test Node Application
+    - Install Node Dependencies
   services:
     - docker:dind
   variables:
@@ -114,7 +117,7 @@ Deploy to Heroku Prod:
   image: ruby:alpine
   stage: deploy
   dependencies:
-    - Test Node Application
+    - Install Node Dependencies
   variables:
     MY_APP: ccn-covid19-sg-dashboard
   before_script:
