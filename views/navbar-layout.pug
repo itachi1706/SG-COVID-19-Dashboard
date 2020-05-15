@@ -47,11 +47,4 @@ html
             block content
         include metafooter
         script.
-            const firebaseConfig = !{fbconfig};
-            $(document).ready(function() {
-                $(`#nb#{route}`).toggleClass('active');
-                firebase.initializeApp(firebaseConfig);
-                firebase.auth().onAuthStateChanged(function (user) {
-                    console.log(user);
-                });
-            })
+            $(document).ready(function() { $(`#nb#{route}`).toggleClass('active'); });

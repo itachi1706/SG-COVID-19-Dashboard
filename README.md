@@ -7,7 +7,7 @@ Site will be available [here](https://ccn-covid19-sg-dashboard.herokuapp.com/) w
 
 ## How to start
 * Get a config key from [Firebase](https://console.firebase.google.com)
-* Create a file called "config-dev.js" in the routes folder
+* Create a file called "config-dev.js" in the root repository directory.
 * Add the following code
 ```javascript
 module.exports.config = <your firebase config>;

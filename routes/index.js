@@ -1,16 +1,17 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var firebaseutil = require('./firebase');
-var firebase = require('firebase');
+const frontend = require('./firebase-frontend');
+const {firebase, admin} = require('../config');
+const auth = require('../api/firebase-auth');
 
 function checkAuth(req, res, next) {
-  if (req.header.authtoken) {
+  if (auth.isAuthenticated()) {
     console.log("Auth Check: true");
-    req.loggedin = true;
+    res.locals.authed = true;
   } else {
     console.log("Auth Check: false");
-    req.loggedin = false;
+    res.locals.authed = false;
   }
   next();
 }
@@ -23,17 +24,30 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/navbartest', function (req, res) {
-  let loggedin = (req.query.log === '1');
-  console.log(loggedin);
-  res.render('test-navbar', { route: 'cd', fbconfig: firebaseutil.getConfigFrontend(), username: 'Test', loggedIn: loggedin });
+  res.render('test-navbar', { route: 'cd', username: auth.getName(), loggedIn: res.locals.authed });
 });
 
-router.get('/logout', function (req, res) {
+router.get('/logout', async function (req, res) {
+  await auth.logout();
   res.redirect('/navbartest');
 });
 
 router.get('/login', function (req, res) {
-  res.render('login', { route: '', fbconfig: firebaseutil.getConfigFrontend() })
+  let error = '';
+  if (req.query.err) error = auth.failErrors[req.query.err];
+  res.render('login', { route: '', errorCode: error, username: auth.getName(), loggedIn: res.locals.authed })
+});
+
+router.post('/login', async function (req, res) {
+  console.log(req.body);
+  console.log("hello");
+  let result = await auth.login(req.body.email, req.body.password);
+  if (result.success) {
+    res.redirect('/navbartest'); // TODO: Replace with redirect url when available
+  } else {
+    let errorCode = auth.convertAuthCodeToError(result.message);
+    res.redirect(`/login?err=${errorCode}`);
+  }
 });
 
 module.exports = router;
