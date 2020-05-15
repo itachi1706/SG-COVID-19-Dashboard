@@ -2,3 +2,4 @@ node_modules/
 /views/**/*.html
 public/stylesheets/style.css
 public/stylesheets/style.css.map
+routes/config-dev.js
