@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "nodemon ./bin/www"
+    "debug": "nodemon ./bin/www",
+    "heroku-postbuild": "echo $firebaseSvcAcct > svc.b64 && base64 -d -i svc.b64 > service-account.json"
   },
   "dependencies": {
     "bootstrap-material-design": "^4.1.2",
