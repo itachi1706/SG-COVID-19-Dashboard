@@ -6,7 +6,8 @@ let firebaseConfig, serviceAccount;
 
 if(process.env.PRODMODE) {
     firebaseConfig = process.env.firebaseConfig;
-    serviceAccount = require(process.env.firebaseSvcAcct);
+    //serviceAccount = require(process.env.firebaseSvcAcct);
+    serviceAccount = process.env.firebaseSvcAcct;
 }
 else {
     let dev = require('./config-dev');
