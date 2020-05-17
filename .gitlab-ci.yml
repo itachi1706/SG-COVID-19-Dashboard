@@ -125,6 +125,9 @@ Deploy to Heroku Prod:
     - gem install dpl
     - echo "Deploying to Heroku"
   script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
+  environment:
+    name: production
+    url: https://covid19sg.itachi1706.com/
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
