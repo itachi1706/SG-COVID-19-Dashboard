@@ -126,7 +126,7 @@ Deploy to Heroku Prod:
     - echo "Deploying to Heroku"
   script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
   environment:
-    name: production
+    name: Production
     url: https://covid19sg.itachi1706.com/
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
