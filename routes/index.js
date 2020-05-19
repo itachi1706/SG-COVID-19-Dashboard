@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const frontend = require('./firebase-frontend');
+const frontend = require('../api/firebase-frontend');
 const auth = require('../api/firebase-auth');
 
 async function checkAuth(req, res, next) {

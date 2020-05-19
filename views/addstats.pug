@@ -1,0 +1,16 @@
+extends navbar-layout
+
+block content
+    h2 Add Statistics for a Day
+    .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
+
+    h4.mt-5 Previous Day Statistics
+    table.table
+        thead
+            tr
+                each val in cols
+                    th(scope='col')= val
+        tbody
+            tr
+                each val in rows
+                    td= val
