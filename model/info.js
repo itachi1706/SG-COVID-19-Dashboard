@@ -24,12 +24,12 @@ const model = {
     'Quarantined': 'Quarantined',
     'CompletedQuarantine': 'Completed Quarantine',
     'DORSCON': 'DORSCON Level',
-    'QUO-Pending': 'QUO - Pending',
-    'QUO-TransferHospital': 'QUO - Transfer Hospital',
-    'QUO-NonGazettedDorm': 'QUO - Non Gazetted Dorms',
-    'QUO-GazettedDorm': 'QUO - Gazetted Dorms',
-    'QUO-GovtQuarantinedFacilities': 'QUO - Government Quarantine Facilities',
-    'QUO-HomeQuarantinedOrder': 'QUO - Home Quarantine Orders',
+    'QUO_Pending': 'QUO - Pending',
+    'QUO_TransferHospital': 'QUO - Transfer Hospital',
+    'QUO_NonGazettedDorm': 'QUO - Non Gazetted Dorms',
+    'QUO_GazettedDorm': 'QUO - Gazetted Dorms',
+    'QUO_GovtQuarantinedFacilities': 'QUO - Government Quarantine Facilities',
+    'QUO_HomeQuarantinedOrder': 'QUO - Home Quarantine Orders',
     'Remarks': 'Remarks'
 };
 

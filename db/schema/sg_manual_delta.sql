@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 17, 2020 at 09:19 PM
+-- Generation Time: May 19, 2020 at 07:13 PM
 -- Server version: 5.7.29
 -- PHP Version: 7.2.24-0ubuntu0.18.04.4
 
@@ -51,12 +51,12 @@ CREATE TABLE `sg_manual_delta` (
   `TotalCloseContacts` int(11) NOT NULL DEFAULT '-1',
   `Quarantined` int(11) NOT NULL DEFAULT '0',
   `CompletedQuarantine` int(11) NOT NULL DEFAULT '0' COMMENT '(INC-GREEN)',
-  `QUO-Pending` int(11) NOT NULL DEFAULT '0',
-  `QUO-TransferHospital` int(11) NOT NULL DEFAULT '0',
-  `QUO-NonGazettedDorm` int(11) NOT NULL DEFAULT '0',
-  `QUO-GazettedDorm` int(11) NOT NULL DEFAULT '0',
-  `QUO-GovtQuarantinedFacilities` int(11) NOT NULL DEFAULT '0',
-  `QUO-HomeQuarantinedOrder` int(11) NOT NULL DEFAULT '0'
+  `QUO_Pending` int(11) NOT NULL DEFAULT '0',
+  `QUO_TransferHospital` int(11) NOT NULL DEFAULT '0',
+  `QUO_NonGazettedDorm` int(11) NOT NULL DEFAULT '0',
+  `QUO_GazettedDorm` int(11) NOT NULL DEFAULT '0',
+  `QUO_GovtQuarantinedFacilities` int(11) NOT NULL DEFAULT '0',
+  `QUO_HomeQuarantinedOrder` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

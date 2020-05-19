@@ -54,23 +54,23 @@ block content
                             .form-inline
                                 .form-group
                                     label(for="QUOPending").bmd-label-floating Pending
-                                    input.form-control#QUOPending(type='number', name='QUO-Pending', required=true)
+                                    input.form-control#QUOPending(type='number', name='QUO_Pending', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="QUOTransHos").bmd-label-floating Transfer Hospital
-                                    input.form-control#QUOTransHos(type='number', name='QUO-TransferHospital', required=true)
+                                    input.form-control#QUOTransHos(type='number', name='QUO_TransferHospital', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="QUONonGD").bmd-label-floating Non Gazetted Dorms
-                                    input.form-control#QUONonGD(type='number', name='QUO-NonGazettedDorm', required=true)
+                                    input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', required=true, onblur="updateCalc()")
                             .form-inline
                                 .form-group
                                     label(for="QUOGD").bmd-label-floating Gazetted Dorms
-                                    input.form-control#QUOGD(type='number', name='QUO-GazettedDorm', required=true)
+                                    input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="QUOGovtQF").bmd-label-floating Govt Quarantine Facilities
-                                    input.form-control#QUOGovtQF(type='number', name='QUO-GovtQuarantinedFacilities', required=true)
+                                    input.form-control#QUOGovtQF(type='number', name='QUO_GovtQuarantinedFacilities', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="QUOHQO").bmd-label-floating Home Quarantine Orders
-                                    input.form-control#QUOHQO(type='number', name='QUO-HomeQuarantinedOrder', required=true)
+                                    input.form-control#QUOHQO(type='number', name='QUO_HomeQuarantinedOrder', required=true, onblur="updateCalc()")
                             .form-group.w-75
                                 label(for="Remarks").bmd-label-floating= model.Remarks
                                 input.form-control#Remarks.w-75(type='text', name='Remarks')
