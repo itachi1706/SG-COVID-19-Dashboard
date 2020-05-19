@@ -4,6 +4,17 @@ module.exports.failErrors = {
     1: "You must login before doing this operation"
 };
 
+module.exports.checkAuth = async (req, res, next) => {
+    let token = await exports.isAuthenticatedToken(req.cookies.authToken);
+    if (token) {
+        res.locals.authed = true;
+        res.locals.name = exports.getName(token);
+        return true;
+    }
+    res.locals.authed = false;
+    return false;
+}
+
 module.exports.isAuthenticatedToken = async (token) => {
     if (token) {
         try {
