@@ -8,9 +8,10 @@ block content
     table.table
         thead
             tr
-                each val in cols
-                    th(scope='col')= val
+                th(scope='col') Record
+                th(scope='col') Value
         tbody
-            tr
-                each val in rows
-                    td= val
+            each val in prevData
+                tr
+                    th(scope='row')= val.name
+                    td= val.val
