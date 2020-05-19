@@ -5,6 +5,7 @@ const auth = require('../api/firebase-auth');
 const frontend = require('../api/firebase-frontend');
 const {dbConfig} = require('../config');
 const db = require('../api/db');
+const dbUtil = require('../api/db-util');
 const utilFunc = require('../util');
 
 const infoModel = require('../model/info');
@@ -30,14 +31,11 @@ router.get('/', function (req, res) {
 });
 
 router.get('/add', async function (req, res) {
-    console.log(`SELECT * FROM ${dbConfig.infoTable}`);
     let prevDayResults = [];
     let newDay = -1;
-    let data = {}
 
-    try {
-        let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} ORDER BY Day DESC LIMIT 1`);
-        data = result[0]; // Only 1 record expected, the previous day records
+    let data = await dbUtil.getLastDay();
+    if (data) {
         for (let d in data) {
             let t = {name: infoModel[d], val: data[d]};
             prevDayResults.push(t);
@@ -45,14 +43,11 @@ router.get('/add', async function (req, res) {
         // Some autofill stats
         newDay = data.Day + 1;
         console.log("New Day: " + newDay);
-    } catch (e) {
-        console.log(e);
     }
 
     // Set a default timestamp of today 1200h. Must format to something like "2019-01-01T11:11"
     let defaultDate = new Date();
     defaultDate.setHours(12, 0, 0);
-    console.log(data);
 
     res.render('addstats', { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: res.locals.name, loggedIn: res.locals.authed,
        prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16), newDay: newDay, prevDataRaw: JSON.stringify(data) });
