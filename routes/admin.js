@@ -5,6 +5,7 @@ const auth = require('../api/firebase-auth');
 const frontend = require('../api/firebase-frontend');
 const {dbConfig} = require('../config');
 const db = require('../api/db');
+const utilFunc = require('../util');
 
 const infoModel = require('../model/info');
 
@@ -43,8 +44,12 @@ router.get('/add', async function (req, res) {
         console.log(e);
     }
 
+    // Set a default timestamp of today 1200h. Must format to something like "2019-01-01T11:11"
+    let defaultDate = new Date();
+    defaultDate.setHours(12, 0, 0);
+
     res.render('addstats', { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: res.locals.name, loggedIn: res.locals.authed,
-       prevData: prevDayResults});
+       prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16) });
 });
 
 module.exports = router;
