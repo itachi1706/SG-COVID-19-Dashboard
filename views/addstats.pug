@@ -13,42 +13,39 @@ block content
                             .form-inline
                                 .form-group
                                     label(for="Date").bmd-label-floating= model.Date
-                                    input.form-control#Date(type='datetime-local', name='Date', value= defaultDate, required=true)
+                                    input.form-control#Date(type='datetime-local', name='Date', value= defaultDate, required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="CCDay").bmd-label-floating= model.ConfirmedCases_Day
-                                    input.form-control#CCDay(type='number', name='ConfirmedCases_Day', required=true)
+                                    input.form-control#CCDay(type='number', name='ConfirmedCases_Day', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="ICDay").bmd-label-floating= model.ImportedCase_Day
-                                    input.form-control#ICDay(type='number', name='ImportedCase_Day', required=true)
+                                    input.form-control#ICDay(type='number', name='ImportedCase_Day', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="LUnlink").bmd-label-floating= model.LocalUnlinked
-                                    input.form-control#LUnlink(type='number', name='LocalUnlinked', required=true)
+                                    input.form-control#LUnlink(type='number', name='LocalUnlinked', required=true, onblur="updateCalc()")
                             .form-inline
                                 .form-group
                                     label(for="HosICU").bmd-label-floating= model.HospitalizedICU
-                                    input.form-control#HosICU(type='number', name='HospitalizedICU', required=true)
+                                    input.form-control#HosICU(type='number', name='HospitalizedICU', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="HosOA").bmd-label-floating= model.HospitalizedOtherArea
-                                    input.form-control#HosOA(type='number', name='HospitalizedOtherArea', required=true)
+                                    input.form-control#HosOA(type='number', name='HospitalizedOtherArea', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="RecDay").bmd-label-floating= model.Recovered_Day
-                                    input.form-control#RecDay(type='number', name='Recovered_Day', required=true)
+                                    input.form-control#RecDay(type='number', name='Recovered_Day', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3
                                     label(for="DeathsDay").bmd-label-floating= model.Deaths_Day
-                                    input.form-control#DeathsDay(type='number', name='Deaths_Day', required=true)
+                                    input.form-control#DeathsDay(type='number', name='Deaths_Day', required=true, onblur="updateCalc()")
                             .form-inline
                                 .form-group
-                                    label(for="CumC").bmd-label-floating= model.CumulativeConfirmed
-                                    input.form-control#CumC(type='number', name='CumulativeConfirmed', required=true)
-                                .form-group.ml-lg-3
                                     label(for="DQOI").bmd-label-floating Quarantined Orders Issued
-                                    input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', required=true)
+                                    input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', required=true, onblur="updateCalc()")
                                 .form-group.ml-lg-3.w-50
                                     label(for="DORSCON").bmd-label-floating= model.DORSCON
                                     select.form-control#DORSCON.w-50(name='DORSCON')
                                         option(value="GREEN") Green
-                                        option(value="YELLOW") Orange
-                                        option(value="ORANGE") Yellow
+                                        option(value="YELLOW") Yellow
+                                        option(value="ORANGE") Orange
                                         option(value="RED") Red
                             h5 Quarantine Orders Issued Today
                             .form-inline
@@ -80,7 +77,7 @@ block content
                             .form-inline
                                 .form-group
                                     label(for="Day").bmd-label-floating= model.Day
-                                    input.form-control#Day(type='number', name='Day', disabled=true, value="0")
+                                    input.form-control#Day(type='number', name='Day', disabled=true, value= newDay)
                                 .form-group.ml-lg-3
                                     label(for="TLCDay").bmd-label-floating= model.TotalLocalCase_Day
                                     input.form-control#TLCDay(type='number', name='TotalLocalCase_Day', disabled=true, value="0")
@@ -99,16 +96,19 @@ block content
                                     input.form-control#HosStable(type='number', name='HospitalizedStable', disabled=true, value="0")
                             .form-inline
                                 .form-group
+                                    label(for="CumC").bmd-label-floating= model.CumulativeConfirmed
+                                    input.form-control#CumC(type='number', name='CumulativeConfirmed', disabled=true, value="0")
+                                .form-group.ml-lg-3
                                     label(for="CumI").bmd-label-floating= model.CumulativeImported
                                     input.form-control#CumI(type='number', name='CumulativeImported', disabled=true, value="0")
                                 .form-group.ml-lg-3
                                     label(for="CumL").bmd-label-floating= model.CumulativeLocal
                                     input.form-control#CumL(type='number', name='CumulativeLocal', disabled=true, value="0")
-                                .form-group.ml-lg-3
-                                    label(for="CumR").bmd-label-floating= model.CumulativeRecovered
-                                    input.form-control#CumR(type='number', name='CumulativeRecovered', disabled=true, value="0")
                             .form-inline
                                 .form-group
+                                    label(for="CumR").bmd-label-floating= model.CumulativeRecovered
+                                    input.form-control#CumR(type='number', name='CumulativeRecovered', disabled=true, value="0")
+                                .form-group.ml-lg-3
                                     label(for="CumDe").bmd-label-floating= model.CumulativeDeaths
                                     input.form-control#CumDe(type='number', name='CumulativeDeaths', disabled=true, value="0")
                                 .form-group.ml-lg-3
@@ -138,3 +138,27 @@ block content
                 tr
                     th(scope='row')= val.name
                     td= val.val
+    script.
+        const prevData = !{prevDataRaw};
+        function updateCalc() {
+            console.log("Updating Calculation Results");
+            let tlcDay = $('#TLCDay'), ccDay = $('#CCDay'), icDay = $('#ICDay'), cumL = $('#CumL'), cumC = $('#CumC');
+            let cumDi = $('#CumDi'), cumDe = $('#CumDe'), hosTotal = $('#HosTotal'), hosOA = $('#HosOA'), recDay = $('#RecDay');
+            let deathsDay = $('#DeathsDay'), tcc = $('#TCC'), quarantined = $('#Quarantined');
+
+            tlcDay.val(ccDay.val() - icDay.val());
+            cumL.val(prevData.CumulativeLocal + +tlcDay.val());
+            cumDi.val(prevData.CumulativeDischarged + +recDay.val() + +deathsDay.val());
+            cumDe.val(prevData.CumulativeDeaths + +deathsDay.val());
+            cumC.val(prevData.CumulativeConfirmed + +ccDay.val());
+            hosTotal.val(cumC.val() - cumDi.val() - cumDe.val() - hosOA.val());
+            tcc.val(prevData.TotalCloseContacts + +$('#DQOI').val());
+            quarantined.val(+$('#QUOPending').val() + +$('#QUOTransHos').val() + +$('#QUONonGD').val() + +$('#QUOGD').val() + +$('#QUOGovtQF').val() + +$('#QUOHQO').val());
+
+            $('#LLink').val(cumL.val() - $('#LUnlink').val());
+            $('#HosTotOA').val(+hosTotal.val() + +hosOA.val());
+            $('#HosStable').val(hosTotal.val() - $('#HosICU').val());
+            $('#CumI').val(prevData.CumulativeImported + +icDay.val());
+            $('#CumR').val(prevData.CumulativeRecovered + +recDay.val());
+            $('#ComQuarantined').val(tcc.val() - quarantined.val());
+        }
