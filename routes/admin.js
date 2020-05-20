@@ -28,8 +28,7 @@ async function checkAuth(req, res, next) {
     res.redirect('/login?err=1');
 }
 
-// TODO: Reenable before pushing to prod
-//router.use('/', checkAuth);
+router.use('/', checkAuth);
 
 router.get('/', function (req, res) {
     console.log("uhhh");
