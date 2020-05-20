@@ -8,6 +8,8 @@ const db = require('../api/db');
 const dbUtil = require('../api/db-util');
 const utilFunc = require('../util');
 
+const moment = require('moment');
+
 const infoModel = require('../model/info');
 
 const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
@@ -35,12 +37,17 @@ router.get('/', function (req, res) {
 });
 
 router.get('/add', async function (req, res) {
+    let successthingy = '';
+    if (req.query.success) successthingy = `Successfully added Day ${req.query.success} into Database`;
+    if (req.query.fail) successthingy = `Failed to add Day ${req.query.fail}. Statistics for this day already exist`;
+
     let prevDayResults = [];
     let newDay = -1;
 
     let data = await dbUtil.getLastDay();
     if (data) {
         for (let d in data) {
+            if (!data.hasOwnProperty(d)) continue;
             let t = {name: infoModel[d], val: data[d]};
             prevDayResults.push(t);
         }
@@ -53,12 +60,53 @@ router.get('/add', async function (req, res) {
     let defaultDate = new Date();
     defaultDate.setHours(12, 0, 0);
 
-    res.render('addstats', { ...defaultAdmObject, prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16), newDay: newDay, prevDataRaw: JSON.stringify(data) });
+    res.render('addstats', { ...defaultAdmObject, prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16),
+        newDay: newDay, prevDataRaw: JSON.stringify(data), suc: successthingy });
 });
 
 router.post('/add', async (req, res) => {
     let data = await dbUtil.getLastDay();
     res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data)});
 });
+
+router.post('/add/:day', async (req, res) => {
+    console.log(req.body);
+    console.log("Adding to Database");
+    let data = JSON.parse(JSON.stringify(req.body));
+    for (let t in data) if (data.hasOwnProperty(t) && !isNaN(data[t])) data[t] = parseInt(data[t]);
+    let date = new Date(data.Date);
+    let mysqlDate = moment(date).format('YYYY-MM-DD HH:mm:ss')
+    console.log(mysqlDate);
+    let infoSql = `INSERT INTO ${dbConfig.infoTable} VALUES (?)`; //We can just insert as it should not conflict
+    let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal, 
+    HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths, 
+    CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities, 
+    QUO_HomeQuarantinedOrder) VALUES (?) `; // We can just insert as it will never conflict
+    // Craft array to insert
+    let infoArr = [ data.Day, mysqlDate, data.ConfirmedCases_Day, data.ImportedCase_Day, data.TotalLocalCase_Day, data.LocalLinked, data.LocalUnlinked, data.Hospital_OtherAreas,
+        data.HospitalizedTotal, data.HospitalizedStable, data.HospitalizedICU, data.HospitalizedOtherArea, data.Recovered_Day, data.Deaths_Day, data.CumulativeConfirmed,
+        data.CumulativeImported, data.CumulativeLocal, data.CumulativeRecovered, data.CumulativeDeaths, data.CumulativeDischarged, data.DailyQuarantineOrdersIssued,
+        data.TotalCloseContacts, data.Quarantined, data.CompletedQuarantine, data.DORSCON, data.QUO_Pending, data.QUO_TransferHospital, data.QUO_NonGazettedDorm,
+        data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null) ];
+
+    let deltaArr = [ data.Day, data.dConfirmedCases_Day, data.dImportedCase_Day, data.dTotalLocalCase_Day, data.dLocalLinked, data.dLocalUnlinked, data.dHospital_OtherAreas,
+        data.dHospitalizedTotal, data.dHospitalizedStable, data.dHospitalizedICU, data.dHospitalizedOtherArea, data.dRecovered_Day, data.dDeaths_Day, data.dCumulativeConfirmed,
+        data.dCumulativeImported, data.dCumulativeLocal, data.dCumulativeRecovered, data.dCumulativeDeaths, data.dCumulativeDischarged, data.dDailyQuarantineOrdersIssued,
+        data.dTotalCloseContacts, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
+        data.dQUO_GazettedDorm, data.dQUO_GovtQuarantinedFacilities, data.dQUO_HomeQuarantinedOrder ];
+    try {
+        let result = await db.query(infoSql, [infoArr]);
+        console.log(`Added ${result.affectedRows} rows into Info Table`);
+        let result2 = await db.query(deltaSql, [deltaArr]);
+        console.log(`Added ${result2.affectedRows} rows into Delta Table with ID ${result2.insertId}`);
+        console.log(`Finished adding day ${req.params.day}`);
+        res.redirect(`/admin/add?success=${req.params.day}`);
+    } catch (err) {
+        console.log("ERROR");
+        console.log(err);
+        if (err.code === 'ER_DUP_ENTRY') res.redirect(`/admin/add?fail=${req.params.day}`);
+        else res.redirect('/admin/add');
+    }
+})
 
 module.exports = router;

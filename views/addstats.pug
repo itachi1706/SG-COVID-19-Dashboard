@@ -5,7 +5,8 @@ block content
     .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
 
     form(action='/admin/add' method='post')
-        table.table
+        .text-success#addSuccess.text-hide.mt-2= suc
+        table.table.mt-3
             tbody
                 tr
                     td
@@ -163,3 +164,4 @@ block content
             $('#CumR').val(prevData.CumulativeRecovered + +recDay.val());
             $('#ComQuarantined').val(tcc.val() - quarantined.val());
         }
+        $(document).ready(function () { let e = $('#addSuccess'); if (e.html().length !== 0) { if (e.html().startsWith('Failed')) e.addClass('text-danger').removeClass('text-success'); e.removeClass('text-hide'); } });
