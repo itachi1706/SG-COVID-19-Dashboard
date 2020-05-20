@@ -1,5 +1,6 @@
 node_modules/
 /views/**/*.html
+/views/**/*.js
 public/stylesheets/style.css
 public/stylesheets/style.css.map
 config-dev.js

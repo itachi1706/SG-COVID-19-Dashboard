@@ -1,19 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const frontend = require('./firebase-frontend');
+const frontend = require('../api/firebase-frontend');
 const auth = require('../api/firebase-auth');
 
 async function checkAuth(req, res, next) {
-  let token = await auth.isAuthenticatedToken(req.cookies.authToken);
-  if (token) {
-    console.log("Auth Check: true");
-    res.locals.authed = true;
-    res.locals.name = auth.getName(token);
-  } else {
-    console.log("Auth Check: false");
-    res.locals.authed = false;
-  }
+  await auth.checkAuth(req, res, next);
   next();
 }
 
@@ -31,6 +23,7 @@ router.get('/navbartest', function (req, res) {
 router.get('/login', function (req, res) {
   let error = '';
   if (req.query.err) error = auth.failErrors[req.query.err];
+  if (error === auth.failErrors[1]) res.status(401); // Set 401 Unauthorized if coming from unauth users
   res.render('login', { route: '', fbConfig: frontend.getFirebaseConfig(), errorCode: error, username: res.locals.name, loggedIn: res.locals.authed })
 });
 
