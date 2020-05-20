@@ -204,34 +204,34 @@ block content
         const prevData = !{prevDataRaw};
 
         function calcDeltas() {
-            $('#dCCD').val(prevData.ConfirmedCases_Day - $('#CCDay').val());
-            $('#dICD').val(prevData.ImportedCase_Day - $('#ICDay').val());
-            $('#dTLCDay').val(prevData.TotalLocalCase_Day - $('#TLCDay').val());
-            $('#dLLink').val(prevData.LocalLinked - $('#LLink').val());
-            $('#dLUnlink').val(prevData.LocalUnlinked - $('#LUnlink').val());
-            $('#dHosOA').val(prevData.Hospital_OtherAreas - $('#HosTotOA').val());
-            $('#dHT').val(prevData.HospitalizedTotal - $('#HosTotal').val());
-            $('#dHS').val(prevData.HospitalizedStable - $('#HosStable').val());
-            $('#dHICU').val(prevData.HospitalizedICU - $('#HosICU').val());
-            $('#dHOA').val(prevData.HospitalizedOtherArea - $('#HosOA').val());
-            $('#dR').val(prevData.Recovered_Day - $('#RecDay').val());
-            $('#dD').val(prevData.Deaths_Day - $('#DeathsDay').val());
-            $('#dCumC').val(prevData.CumulativeConfirmed - $('#CumC').val());
-            $('#dCumI').val(prevData.CumulativeImported - $('#CumI').val());
-            $('#dCumL').val(prevData.CumulativeLocal - $('#CumL').val());
-            $('#dCumR').val(prevData.CumulativeRecovered - $('#CumR').val());
-            $('#dCumDe').val(prevData.CumulativeDeaths - $('#CumDe').val());
-            $('#dCumDi').val(prevData.CumulativeDischarged - $('#CumDi').val());
-            $('#dDQUO').val(prevData.DailyQuarantineOrdersIssued - $('#DQOI').val());
-            $('#dTCC').val(prevData.TotalCloseContacts - $('#TCC').val());
-            $('#dQuarantine').val(prevData.Quarantined - $('#Quarantined').val());
-            $('#dCQ').val(prevData.CompletedQuarantine - $('#ComQuarantined').val());
-            $('#dQUOP').val(prevData.QUO_Pending - $('#QUOPending').val());
-            $('#dQUOTf').val(prevData.QUO_TransferHospital - $('#QUOTransHos').val());
-            $('#dQUONGD').val(prevData.QUO_NonGazettedDorm - $('#QUONonGD').val());
-            $('#dQUOGD').val(prevData.QUO_GazettedDorm - $('#QUOGD').val());
-            $('#dQUOGQF').val(prevData.QUO_GovtQuarantinedFacilities - $('#QUOGovtQF').val());
-            $('#dQUOHQO').val(prevData.QUO_HomeQuarantinedOrder - $('#QUOHQO').val());
+            $('#dCCD').val($('#CCDay').val() - prevData.ConfirmedCases_Day);
+            $('#dICD').val($('#ICDay').val() - prevData.ImportedCase_Day);
+            $('#dTLCDay').val($('#TLCDay').val() - prevData.TotalLocalCase_Day);
+            $('#dLLink').val($('#LLink').val() - prevData.LocalLinked);
+            $('#dLUnlink').val($('#LUnlink').val() - prevData.LocalUnlinked);
+            $('#dHosOA').val($('#HosTotOA').val() - prevData.Hospital_OtherAreas);
+            $('#dHT').val($('#HosTotal').val() - prevData.HospitalizedTotal);
+            $('#dHS').val($('#HosStable').val() - prevData.HospitalizedStable);
+            $('#dHICU').val($('#HosICU').val() - prevData.HospitalizedICU);
+            $('#dHOA').val($('#HosOA').val() - prevData.HospitalizedOtherArea);
+            $('#dR').val($('#RecDay').val() - prevData.Recovered_Day);
+            $('#dD').val($('#DeathsDay').val() - prevData.Deaths_Day);
+            $('#dCumC').val($('#CumC').val() - prevData.CumulativeConfirmed);
+            $('#dCumI').val($('#CumI').val() - prevData.CumulativeImported);
+            $('#dCumL').val($('#CumL').val() - prevData.CumulativeLocal);
+            $('#dCumR').val($('#CumR').val() - prevData.CumulativeRecovered);
+            $('#dCumDe').val($('#CumDe').val() - prevData.CumulativeDeaths);
+            $('#dCumDi').val($('#CumDi').val() - prevData.CumulativeDischarged);
+            $('#dDQUO').val($('#DQOI').val() - prevData.DailyQuarantineOrdersIssued);
+            $('#dTCC').val($('#TCC').val() - prevData.TotalCloseContacts);
+            $('#dQuarantine').val($('#Quarantined').val() - prevData.Quarantined);
+            $('#dCQ').val($('#ComQuarantined').val() - prevData.CompletedQuarantine);
+            $('#dQUOP').val($('#QUOPending').val() - prevData.QUO_Pending);
+            $('#dQUOTf').val($('#QUOTransHos').val() - prevData.QUO_TransferHospital);
+            $('#dQUONGD').val($('#QUONonGD').val() - prevData.QUO_NonGazettedDorm);
+            $('#dQUOGD').val($('#QUOGD').val() - prevData.QUO_GazettedDorm);
+            $('#dQUOGQF').val($('#QUOGovtQF').val() - prevData.QUO_GovtQuarantinedFacilities);
+            $('#dQUOHQO').val($('#QUOHQO').val() - prevData.QUO_HomeQuarantinedOrder);
 
             // Color accordingly
             $('#del > div > div > input').each((key, elem) => {
