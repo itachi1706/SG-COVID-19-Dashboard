@@ -4,7 +4,7 @@ block content
     h2 Add Statistics for a Day
     .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
 
-    form
+    form(action='/admin/add' method='post')
         table.table
             tbody
                 tr
@@ -126,95 +126,6 @@ block content
                                     input.form-control#ComQuarantined(type='number', name='CompletedQuarantine', readonly=true, value="0")
         .form-group
             button.btn.btn-primary(type="submit") Add Statistics
-        h4.mt-2 Deltas
-            .form-inline
-                .form-group
-                    label(for="dCCD").bmd-label-floating= model.ConfirmedCases_Day
-                    input.form-control#dCCD(type='number', name='dConfirmedCases_Day', readonly=true, value="1")
-                .form-group.ml-lg-3
-                    label(for="dICD").bmd-label-floating= model.ImportedCase_Day
-                    input.form-control#dICD(type='number', name='dImportedCase_Day', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dTLCDay").bmd-label-floating= model.TotalLocalCase_Day
-                    input.form-control#dTLCDay(type='number', name='dTotalLocalCase_Day', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dLLink").bmd-label-floating= model.LocalLinked
-                    input.form-control#dLLink(type='number', name='dLocalLinked', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dLUnlink").bmd-label-floating= model.LocalUnlinked
-                    input.form-control#dLUnlink(type='number', name='dLocalUnlinked', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dHosOA").bmd-label-floating= model.Hospital_OtherAreas
-                    input.form-control#dHosOA(type='number', name='dHospital_OtherAreas', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dHT").bmd-label-floating= model.HospitalizedTotal
-                    input.form-control#dHT(type='number', name='dHospitalizedTotal', readonly=true)
-            .form-inline
-                .form-group
-                    label(for="dHS").bmd-label-floating= model.HospitalizedStable
-                    input.form-control#dHS(type='number', name='dHospitalizedStable', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dHICU").bmd-label-floating= model.HospitalizedICU
-                    input.form-control#dHICU(type='number', name='dHospitalizedICU', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dHOA").bmd-label-floating= model.HospitalizedOtherArea
-                    input.form-control#dHOA(type='number', name='dHospitalizedOtherArea', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dR").bmd-label-floating= model.Recovered_Day
-                    input.form-control#dR(type='number', name='dRecovered_Day', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dD").bmd-label-floating= model.Deaths_Day
-                    input.form-control#dD(type='number', name='dDeaths_Day', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dCumC").bmd-label-floating= model.CumulativeConfirmed
-                    input.form-control#dCumC(type='number', name='dCumulativeConfirmed', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dCumI").bmd-label-floating= model.CumulativeImported
-                    input.form-control#dCumI(type='number', name='dCumulativeImported', readonly=true)
-            .form-inline
-                .form-group
-                    label(for="dCumL").bmd-label-floating= model.CumulativeLocal
-                    input.form-control#dCumL(type='number', name='dCumulativeLocal', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dCumR").bmd-label-floating= model.CumulativeRecovered
-                    input.form-control#dCumR(type='number', name='dCumulativeRecovered', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dCumDe").bmd-label-floating= model.CumulativeDeaths
-                    input.form-control#dCumDe(type='number', name='dCumulativeDeaths', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dCumDi").bmd-label-floating= model.CumulativeDischarged
-                    input.form-control#dCumDi(type='number', name='dCumulativeDischarged', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dDQUO").bmd-label-floating Daily QUO Issued
-                    input.form-control#dDQUO(type='number', name='dDailyQuarantineOrdersIssued', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dTCC").bmd-label-floating= model.TotalCloseContacts
-                    input.form-control#dTCC(type='number', name='dTotalCloseContacts', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQuarantine").bmd-label-floating= model.Quarantined
-                    input.form-control#dQuarantine(type='number', name='dQuarantined', readonly=true)
-            .form-inline
-                .form-group
-                    label(for="dCQ").bmd-label-floating= model.CompletedQuarantine
-                    input.form-control#dCQ(type='number', name='dCompletedQuarantine', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOP").bmd-label-floating= model.QUO_Pending
-                    input.form-control#dQUOP(type='number', name='dQUO_Pending', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOTf").bmd-label-floating= model.QUO_TransferHospital
-                    input.form-control#dQUOTf(type='number', name='dQUO_TransferHospital', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUONGD").bmd-label-floating= model.QUO_NonGazettedDorm
-                    input.form-control#dQUONGD(type='number', name='dQUO_NonGazettedDorm', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOGD").bmd-label-floating= model.QUO_GazettedDorm
-                    input.form-control#dQUOGD(type='number', name='dQUO_GazettedDorm', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOGQF").bmd-label-floating QUO - GQF
-                    input.form-control#dQUOGQF(type='number', name='dQUO_GovtQuarantinedFacilities', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOHQO").bmd-label-floating QUO - HQO
-                    input.form-control#dQUOHQO(type='number', name='dQUO_HomeQuarantinedOrder', readonly=true)
 
 
     h4.mt-5 Previous Day Statistics

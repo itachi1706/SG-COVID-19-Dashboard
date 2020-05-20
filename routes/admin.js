@@ -10,10 +10,14 @@ const utilFunc = require('../util');
 
 const infoModel = require('../model/info');
 
+const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
+
 // Check Authentication. Unauthenticated users get kicked to login page
 async function checkAuth(req, res, next) {
     let authCheck = await auth.checkAuth(req, res, next);
     if (authCheck) {
+        defaultAdmObject.username = res.locals.name;
+        defaultAdmObject.loggedIn = res.locals.authed;
         console.log('[ADMIN] User is authenticated');
         next();
         return;
@@ -49,8 +53,12 @@ router.get('/add', async function (req, res) {
     let defaultDate = new Date();
     defaultDate.setHours(12, 0, 0);
 
-    res.render('addstats', { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: res.locals.name, loggedIn: res.locals.authed,
-       prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16), newDay: newDay, prevDataRaw: JSON.stringify(data) });
+    res.render('addstats', { ...defaultAdmObject, prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16), newDay: newDay, prevDataRaw: JSON.stringify(data) });
+});
+
+router.post('/add', async (req, res) => {
+    let data = await dbUtil.getLastDay();
+    res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data)});
 });
 
 module.exports = router;
