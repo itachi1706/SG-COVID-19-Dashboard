@@ -9,9 +9,9 @@ const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown"
 
 async function checkAuth(req, res, next) {
   let token = await auth.checkAuth(req, res, next);
+  defaultObj.loggedIn = res.locals.authed;
   if (token) {
     defaultObj.username = res.locals.name;
-    defaultObj.loggedIn = res.locals.authed;
   }
   next();
 }
