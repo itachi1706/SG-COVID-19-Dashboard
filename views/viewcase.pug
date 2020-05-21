@@ -19,11 +19,11 @@ block content
     script(src='https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js')
     script.
         function format(data) {
-            return `Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
+            return `<div>Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
                         Status: ${data.Status}<br>Nationality: ${data.Nationality}<br>Hospital: ${data.PHI} (${data.CurrLoc}), ${data.Cluster},
                         ${data.District}, ${data.Region} Region, Singapore ${data.PostalCode}<br>
-                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(parseInt(data.Date)).toDateString()}<br>
-                        Residential Location: ${data.ResidentialLocation}<br>Visited Places: ${data.VisitedPlaces}<br>`;
+                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(data.ConfirmedDate).toDateString()}<br>
+                        Residential Location: ${data.ResidentialLocation}<br>Visited Places: ${data.VisitedPlaces}</div>`;
         }
         $(document).ready(function () {
             let table = $('#caseTable').DataTable({
@@ -42,7 +42,10 @@ block content
                     { data: "Infected" },
                     { data: "CurrLoc" },
                     { data: "Region" }
-                ]
+                ],
+                createdRow: function( row, data, dataIndex) {
+                    $(row).addClass(`case-history-${data.CNFRM_CLR}`);
+                }
             });
             $('#caseTable tbody').on('click', 'td.details-control', function() {
                 let tr = $(this).closest('tr');
@@ -54,7 +57,7 @@ block content
                     icon.removeClass('fa-compress-alt');
                     icon.addClass('fa-expand-alt');
                 } else {
-                    row.child(format(row.data())).show();
+                    row.child(format(row.data()), `case-history-${row.data().CNFRM_CLR}`).show();
                     icon.addClass('fa-compress-alt');
                     icon.removeClass('fa-expand-alt');
                 }

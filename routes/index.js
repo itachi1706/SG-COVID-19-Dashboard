@@ -41,7 +41,7 @@ router.get('/casehistory', async function (req, res) {
 router.get('/casehistory/data', async function(req, res) {
   let output = {data: []};
   try {
-    output.data = await db.query('SELECT * FROM sg_case_info');
+    output.data = await db.query('SELECT * FROM sg_case_info ORDER BY CaseID ASC');
   } catch (e) {
     console.log(e);
   }
