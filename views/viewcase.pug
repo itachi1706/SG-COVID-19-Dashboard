@@ -1,0 +1,62 @@
+extends navbar-layout
+
+block content
+    h2 Case History
+    table#caseTable.table
+        thead
+            tr
+                th
+                th Case
+                th Age
+                th Gender
+                th Status
+                th Type
+                th Current Location
+                th Region
+
+    // Load Datatables
+    script(src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+    script(src='https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js')
+    script.
+        function format(data) {
+            return `Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
+                        Status: ${data.Status}<br>Nationality: ${data.Nationality}<br>Hospital: ${data.PHI} (${data.CurrLoc}), ${data.Cluster},
+                        ${data.District}, ${data.Region} Region, Singapore ${data.PostalCode}<br>
+                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(parseInt(data.Date)).toDateString()}<br>
+                        Residential Location: ${data.ResidentialLocation}<br>Visited Places: ${data.VisitedPlaces}<br>`;
+        }
+        $(document).ready(function () {
+            let table = $('#caseTable').DataTable({
+                ajax: '/casehistory/data',
+                columns: [
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '<span id="exp" class="fad fa-expand-alt"></span>'
+                    },
+                    { data: "CaseID" },
+                    { data: "Age" },
+                    { data: "Gender" },
+                    { data: "Status" },
+                    { data: "Infected" },
+                    { data: "CurrLoc" },
+                    { data: "Region" }
+                ]
+            });
+            $('#caseTable tbody').on('click', 'td.details-control', function() {
+                let tr = $(this).closest('tr');
+                let icon = $(this).find('#exp');
+                let row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    icon.removeClass('fa-compress-alt');
+                    icon.addClass('fa-expand-alt');
+                } else {
+                    row.child(format(row.data())).show();
+                    icon.addClass('fa-compress-alt');
+                    icon.removeClass('fa-expand-alt');
+                }
+            });
+        });
