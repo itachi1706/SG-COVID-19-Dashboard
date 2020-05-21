@@ -1,11 +1,12 @@
 extends navbar-layout
 
 block content
-    h2 Case History
+    h2 Case History (Legacy)
+    .text-warning This data exists only up to 19 April 2020 as the API endpoint for this data has been removed by MOH
+    .text-primary.d-md-none Mobile Devices: Go to landscape mode to view more data
     table#caseTable.table
         thead
             tr
-                th
                 th Case
                 th Age
                 th Gender
@@ -13,10 +14,10 @@ block content
                 th Type
                 th Current Location
                 th Region
+                th See More
 
     // Load Datatables
-    script(src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
-    script(src='https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js')
+    script(src='https://cdn.datatables.net/v/bs4/dt-1.10.21/r-2.2.5/datatables.min.js')
     script.
         function format(data) {
             return `<div>Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
@@ -28,20 +29,23 @@ block content
         $(document).ready(function () {
             let table = $('#caseTable').DataTable({
                 ajax: '/casehistory/data',
+                iDisplayLength: 15,
+                lengthMenu: [5, 10, 15, 20, 25, 50, 100, 200],
+                responsive: true,
                 columns: [
-                    {
-                        className: 'details-control',
-                        orderable: false,
-                        data: null,
-                        defaultContent: '<span id="exp" class="fad fa-expand-alt"></span>'
-                    },
                     { data: "CaseID" },
                     { data: "Age" },
                     { data: "Gender" },
                     { data: "Status" },
                     { data: "Infected" },
                     { data: "CurrLoc" },
-                    { data: "Region" }
+                    { data: "Region" },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '<span id="exp" class="fad fa-expand-alt"></span>'
+                    }
                 ],
                 createdRow: function( row, data, dataIndex) {
                     $(row).addClass(`case-history-${data.CNFRM_CLR}`);
