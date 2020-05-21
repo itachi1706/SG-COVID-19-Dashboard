@@ -1,0 +1,83 @@
+extends navbar-layout
+
+block content
+    h2 Case History (Legacy)
+    .text-warning This data exists only up to 19 April 2020 as the API endpoint for this data has been removed by MOH
+    .text-primary.d-md-none Mobile Devices: Go to landscape mode to view more data
+    table#caseTable.table
+        thead
+            tr
+                th Case
+                th Age
+                th Gender
+                th Status
+                th Type
+                th Current Location
+                th Region
+                th See More
+
+    .mt-5
+        h2 Notes
+        p COVID -19 : COrona VIrus Disease 2019
+            br
+            | AH : Alexandra Hospital &nbsp;&nbsp; CGH : Changi General Hospital &nbsp;&nbsp; KKH : KK Women's and Children's Hospital
+            br
+            | KTPH : Khoo Teck Puat Hospital &nbsp;&nbsp; NCID : National Centre for Infectious Diseases &nbsp;&nbsp; NUH : National University Hospital
+            br
+            | SGH : Singapore General Hospital &nbsp;&nbsp; SKH : Sengkang General Hospital
+
+
+    // DataTables
+    link(rel='stylesheet', href='https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css')
+    link(rel='stylesheet', href='https://cdn.datatables.net/responsive/2.2.4/css/responsive.dataTables.min.css')
+    // Load Datatables
+    script(src='https://cdn.datatables.net/v/bs4/dt-1.10.21/r-2.2.5/datatables.min.js')
+    script.
+        function format(data) {
+            return `<div>Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
+                        Status: ${data.Status}<br>Nationality: ${data.Nationality}<br>Hospital: ${data.PHI} (${data.CurrLoc}), ${data.Cluster},
+                        ${data.District}, ${data.Region} Region, Singapore ${data.PostalCode}<br>
+                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(data.ConfirmedDate).toDateString()}<br>
+                        Residential Location: ${data.ResidentialLocation}<br>Visited Places: ${data.VisitedPlaces}</div>`;
+        }
+        $(document).ready(function () {
+            let table = $('#caseTable').DataTable({
+                ajax: '/casehistory/data',
+                iDisplayLength: 15,
+                lengthMenu: [5, 10, 15, 20, 25, 50, 100, 200],
+                responsive: true,
+                columns: [
+                    { data: "CaseID" },
+                    { data: "Age" },
+                    { data: "Gender" },
+                    { data: "Status" },
+                    { data: "Infected" },
+                    { data: "CurrLoc" },
+                    { data: "Region" },
+                    {
+                        className: 'details-control',
+                        orderable: false,
+                        data: null,
+                        defaultContent: '<span id="exp" class="fad fa-expand-alt"></span>'
+                    }
+                ],
+                createdRow: function( row, data, dataIndex) {
+                    $(row).addClass(`case-history-${data.CNFRM_CLR}`);
+                }
+            });
+            $('#caseTable tbody').on('click', 'td.details-control', function() {
+                let tr = $(this).closest('tr');
+                let icon = $(this).find('#exp');
+                let row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    icon.removeClass('fa-compress-alt');
+                    icon.addClass('fa-expand-alt');
+                } else {
+                    row.child(format(row.data()), `case-history-${row.data().CNFRM_CLR}`).show();
+                    icon.addClass('fa-compress-alt');
+                    icon.removeClass('fa-expand-alt');
+                }
+            });
+        });
