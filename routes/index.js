@@ -4,6 +4,7 @@ const router = express.Router();
 const frontend = require('../api/firebase-frontend');
 const auth = require('../api/firebase-auth');
 const db = require('../api/db');
+const {dbConfig} = require('../config');
 
 const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
 
@@ -37,6 +38,24 @@ router.get('/login', function (req, res) {
 router.get('/casehistory', async function (req, res) {
   res.render('viewcase', {...defaultObj, route: 'cd'});
 });
+
+router.get('/statistics', async function (req, res) {
+  res.render('viewstats', {...defaultObj, route: 'stats'});
+});
+
+router.get('/statistics/:type', async function (req, res) {
+  let output = {data: []};
+  try {
+    output.data = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day > 0 ORDER BY Day DESC`);
+    for (let d in output.data) {
+      output.data[d].Date = new Date(output.data[d].Date).toLocaleString();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  res.json(output);
+});
+
 
 router.get('/casehistory/data', async function(req, res) {
   let output = {data: []};
