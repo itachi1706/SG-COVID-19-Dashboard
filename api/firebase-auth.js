@@ -20,10 +20,10 @@ module.exports.isAuthenticatedToken = async (token) => {
         try {
             let decodedToken = admin.auth().verifyIdToken(token, true);
             if (decodedToken) return decodedToken;
-            return null;
+            return false;
         } catch (e) {
             console.log(e);
-            return null;
+            return false;
         }
     }
     return false;
