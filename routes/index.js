@@ -32,15 +32,15 @@ router.get('/login', function (req, res) {
   let error = '';
   if (req.query.err) error = auth.failErrors[req.query.err];
   if (error === auth.failErrors[1]) res.status(401); // Set 401 Unauthorized if coming from unauth users
-  res.render('login', { ...defaultObj, route: '', errorCode: error, title: 'Login' })
+  res.render('login', { ...defaultObj, route: '', errorCode: error, title: 'Login - COVID-19 Dashboard (SG)' })
 });
 
 router.get('/casehistory', async function (req, res) {
-  res.render('viewcase', {...defaultObj, route: 'cd', title: 'View Case History'});
+  res.render('viewcase', {...defaultObj, route: 'cd', title: 'View Case History - COVID-19 Dashboard (SG)'});
 });
 
 router.get('/statistics', async function (req, res) {
-  res.render('viewstats', {...defaultObj, route: 'stats', title: 'View Daily Statistics'});
+  res.render('viewstats', {...defaultObj, route: 'stats', title: 'View Daily Statistics - COVID-19 Dashboard (SG)'});
 });
 
 router.get('/statistics/:type', async function (req, res) {
