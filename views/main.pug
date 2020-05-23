@@ -1,0 +1,69 @@
+extends navbar-layout
+
+block content
+    .larger-text
+        h2 General Information
+        .font-weight-bold ♫~Wuhan is the virus that I just want to minus~♪
+
+        .mt-2
+            table.dorscon-table
+                tr
+                    td DORSCON STATUS
+                    td.dorscon_cell#dorscon= data.DORSCON
+        .mt-2
+            span
+                b= 'Confirmed Cases: '
+                span= data.ConfirmedCases_Day
+                span.text-red  (▲#{delta.ConfirmedCases_Day})
+            br
+            span #{data.ImportedCase_Day} imported
+            span.text-red  (▲#{delta.ImportedCase_Day})
+            span , #{data.TotalLocalCase_Day} local cases
+            span.text-red  (▲#{delta.TotalLocalCase_Day})
+            br
+            span
+                b= 'Discharged Cases: '
+                span= data.Recovered_Day + data.Deaths_Day
+                span.text-green  (▲#{delta.Recovered_Day + delta.Deaths_Day})
+            br
+            span
+                b= 'Death Cases: '
+                span= data.Deaths_Day
+                span.text-red  (▲#{delta.Deaths_Day})
+            br
+            span
+                b= 'Recovered Cases: '
+                span= data.Recovered_Day
+                span.text-green  (▲#{delta.Recovered_Day})
+            br
+            span
+                b= 'ICU Cases: '
+                span= data.HospitalizedICU
+                span(class=`${iC}`)  (#{iI}#{delta.HospitalizedICU})
+            br
+            span
+                b= 'Warded Cases: '
+                span= data.HospitalizedStable
+                span(class=`${wC}`)  (#{wI}#{delta.HospitalizedStable})
+            br
+            span
+                b= 'Community Facilities Cases: '
+                span= data.HospitalizedOtherArea
+                span(class=`${cC}`)  (#{cI}#{delta.HospitalizedOtherArea})
+
+        .mt-3.font-italic.font-weight-bold Data Updated as of #{data.Date}
+
+    .mt-5
+        h2 What is DORSCON
+        p The Disease Outbreak Response System (DORSCON) Condition is Singapore's colour-coded framework that shows the current disease situation. The framework provides us with general
+            |  guidelines on what needs to be done to prevent and reduce the impact of infections.
+        p Read more on the
+            a(href="https://www.gov.sg/article/what-do-the-different-dorscon-levels-mean")  MOH Website
+        p
+            img(src='images/dorsconlevel.jpg').w-100
+
+    script.
+        $(document).ready(() => {
+            let dors = $('#dorscon');
+            dors.addClass('dorscon-' + dors.text().toLowerCase());
+        })
