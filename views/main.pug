@@ -13,28 +13,28 @@ block content
         .mt-2
             span
                 b= 'Confirmed Cases: '
-                span= data.ConfirmedCases_Day
-                span.text-red  (▲#{delta.ConfirmedCases_Day})
+                span= data.CumulativeConfirmed
+                span.text-red  (▲#{delta.CumulativeConfirmed})
             br
-            span #{data.ImportedCase_Day} imported
-            span.text-red  (▲#{delta.ImportedCase_Day})
-            span , #{data.TotalLocalCase_Day} local cases
-            span.text-red  (▲#{delta.TotalLocalCase_Day})
+            span #{data.CumulativeImported} imported
+            span.text-red  (▲#{delta.CumulativeImported})
+            span , #{data.CumulativeLocal} local cases
+            span.text-red  (▲#{delta.CumulativeLocal})
             br
             span
                 b= 'Discharged Cases: '
-                span= data.Recovered_Day + data.Deaths_Day
-                span.text-green  (▲#{delta.Recovered_Day + delta.Deaths_Day})
+                span= data.CumulativeDischarged
+                span.text-green  (▲#{delta.CumulativeDischarged})
             br
             span
                 b= 'Death Cases: '
-                span= data.Deaths_Day
-                span.text-red  (▲#{delta.Deaths_Day})
+                span= data.CumulativeDeaths
+                span.text-red  (▲#{delta.CumulativeDeaths})
             br
             span
                 b= 'Recovered Cases: '
-                span= data.Recovered_Day
-                span.text-green  (▲#{delta.Recovered_Day})
+                span= data.CumulativeRecovered
+                span.text-green  (▲#{delta.CumulativeRecovered})
             br
             span
                 b= 'ICU Cases: '
