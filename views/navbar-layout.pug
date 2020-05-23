@@ -14,7 +14,7 @@ html
                     li.nav-item#nbcd
                         a.nav-link(href="/casehistory") Case Details
                     li.nav-item#nbstats
-                        a.nav-link(href="#") Daily Statistics
+                        a.nav-link(href="/statistics") Daily Statistics
                     //li.nav-item
                         a.nav-link(href="https://covidsitrep.moh.gov.sg/", target="_blank") MOH Situation Report
                     li.nav-item.dropdown#nbgraphs
@@ -55,7 +55,7 @@ html
                 firebase.initializeApp(firebaseConfig);
                 console.log("Initialized Firebase");
                 firebase.auth().onAuthStateChanged(function (user) {
-                    console.log(user);
+                    //console.log(user);
                     if (user) user.getIdToken(false).then(function (idToken) {
                         if (idToken) document.cookie = `authToken=${idToken}; path=/;`;
                         else document.cookie = 'authToken=; path=/;';
