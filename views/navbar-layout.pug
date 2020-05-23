@@ -55,7 +55,7 @@ html
                 firebase.initializeApp(firebaseConfig);
                 console.log("Initialized Firebase");
                 firebase.auth().onAuthStateChanged(function (user) {
-                    console.log(user);
+                    //console.log(user);
                     if (user) user.getIdToken(false).then(function (idToken) {
                         if (idToken) document.cookie = `authToken=${idToken}; path=/;`;
                         else document.cookie = 'authToken=; path=/;';

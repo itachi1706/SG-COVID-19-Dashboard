@@ -60,12 +60,12 @@ router.get('/add', async function (req, res) {
     defaultDate.setHours(12, 0, 0);
 
     res.render('addstats', { ...defaultAdmObject, prevData: prevDayResults, model: infoModel, defaultDate: utilFunc.toISOLocal(defaultDate).substr(0, 16),
-        newDay: newDay, prevDataRaw: JSON.stringify(data), suc: successthingy });
+        newDay: newDay, prevDataRaw: JSON.stringify(data), suc: successthingy, title: 'Add New Day - Admin Panel' });
 });
 
 router.post('/add', async (req, res) => {
     let data = await dbUtil.getLastDay();
-    res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data)});
+    res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data), title: 'Confirm Day Stats - Admin Panel'});
 });
 
 router.post('/add/:day', async (req, res) => {
