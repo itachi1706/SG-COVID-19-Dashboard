@@ -11,3 +11,13 @@ module.exports.getLastDay = async function () {
     }
 }
 
+module.exports.getDayDelta = async function (day) {
+    try {
+        let result = await db.query(`SELECT * FROM ${dbConfig.deltaTable} WHERE Day = ${day}`);
+        return result[0]; // Only 1 record expected, the previous day records
+    } catch (e) {
+        console.log(e);
+        return {};
+    }
+}
+

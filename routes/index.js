@@ -4,6 +4,7 @@ const router = express.Router();
 const frontend = require('../api/firebase-frontend');
 const auth = require('../api/firebase-auth');
 const db = require('../api/db');
+const dbUtil = require('../api/db-util');
 const {dbConfig} = require('../config');
 
 const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
@@ -20,8 +21,19 @@ async function checkAuth(req, res, next) {
 router.use('/', checkAuth);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', async function(req, res, next) {
+  let data = await dbUtil.getLastDay();
+  let delta = await dbUtil.getDayDelta(data.Day);
+  let icuIcon = (delta.HospitalizedICU > 0) ? '▲' : '▼';
+  let wardIcon = (delta.HospitalizedStable > 0) ? '▲' : '▼';
+  let cfIcon = (delta.HospitalizedOtherArea > 0) ? '▲' : '▼';
+  let icuClass = (delta.HospitalizedICU > 0) ? 'text-red' : 'text-green';
+  let wardClass = (delta.HospitalizedStable > 0) ? 'text-red' : 'text-green';
+  let cfClass = (delta.HospitalizedOtherArea > 0) ? 'text-red' : 'text-green';
+  delta.HospitalizedOtherArea = Math.abs(delta.HospitalizedOtherArea);
+  delta.HospitalizedICU = Math.abs(delta.HospitalizedICU);
+  delta.HospitalizedStable = Math.abs(delta.HospitalizedStable);
+  res.render('main', { ...defaultObj, title: 'COVID-19 Dashboard (SG)', data: data, delta: delta, iI: icuIcon, iC: icuClass, wI: wardIcon, wC: wardClass, cI: cfIcon, cC: cfClass, route: 'home' });
 });
 
 router.get('/navbartest', function (req, res) {

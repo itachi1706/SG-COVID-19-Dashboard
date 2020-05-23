@@ -31,8 +31,7 @@ async function checkAuth(req, res, next) {
 router.use('/', checkAuth);
 
 router.get('/', function (req, res) {
-    console.log("uhhh");
-    res.render('index', {title: "Admin Panel"});
+    res.redirect('/');
 });
 
 router.get('/add', async function (req, res) {
