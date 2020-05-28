@@ -52,14 +52,20 @@ html
         include metafooter
         script.
             const firebaseConfig = !{fbConfig};
+            function cac() {let chk = document.cookie.split('; ').find(row => row.startsWith('authToken')); if (chk) return chk.split('=')[1]; else return "";}
             $(document).ready(function() {
                 $(`#nb#{route}`).toggleClass('active');
                 firebase.initializeApp(firebaseConfig);
                 console.log("Initialized Firebase");
                 firebase.auth().onAuthStateChanged(function (user) {
-                    //console.log(user);
                     if (user) user.getIdToken(false).then(function (idToken) {
-                        if (idToken) document.cookie = `authToken=${idToken}; path=/;`;
+                        let match = true;
+                        if (cac().length !== 0)
+                            if (cac() !== idToken) match = false;
+                        if (idToken) {
+                            document.cookie = `authToken=${idToken}; path=/;`;
+                            if (!match) window.location.reload(); // Reload to fix authentication
+                        }
                         else document.cookie = 'authToken=; path=/;';
                     });
                 });

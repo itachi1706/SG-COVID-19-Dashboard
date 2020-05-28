@@ -8,7 +8,7 @@ module.exports.checkAuth = async (req, res, next) => {
     let token = await exports.isAuthenticatedToken(req.cookies.authToken);
     if (token) {
         res.locals.authed = true;
-        res.locals.name = exports.getName(token);
+        if (token !== "-1") res.locals.name = exports.getName(token);
         return true;
     }
     res.locals.authed = false;
@@ -18,11 +18,12 @@ module.exports.checkAuth = async (req, res, next) => {
 module.exports.isAuthenticatedToken = async (token) => {
     if (token) {
         try {
-            let decodedToken = admin.auth().verifyIdToken(token, true);
+            let decodedToken = await admin.auth().verifyIdToken(token, true); // Is it cause no await here?
             if (decodedToken) return decodedToken;
             return false;
         } catch (e) {
             console.log(e);
+            if (e.code === 'auth/id-token-expired') return "-1";
             return false;
         }
     }
