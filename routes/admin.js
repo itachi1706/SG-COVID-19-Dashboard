@@ -78,7 +78,7 @@ router.post('/add/:day', async (req, res) => {
     let infoSql = `INSERT INTO ${dbConfig.infoTable} VALUES (?)`; //We can just insert as it should not conflict
     let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal, 
     HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths, 
-    CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities, 
+    CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, CompletedQuarantine, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities, 
     QUO_HomeQuarantinedOrder) VALUES (?) `; // We can just insert as it will never conflict
     // Craft array to insert
     let infoArr = [ data.Day, mysqlDate, data.ConfirmedCases_Day, data.ImportedCase_Day, data.TotalLocalCase_Day, data.LocalLinked, data.LocalUnlinked, data.Hospital_OtherAreas,
@@ -90,7 +90,7 @@ router.post('/add/:day', async (req, res) => {
     let deltaArr = [ data.Day, data.dConfirmedCases_Day, data.dImportedCase_Day, data.dTotalLocalCase_Day, data.dLocalLinked, data.dLocalUnlinked, data.dHospital_OtherAreas,
         data.dHospitalizedTotal, data.dHospitalizedStable, data.dHospitalizedICU, data.dHospitalizedOtherArea, data.dRecovered_Day, data.dDeaths_Day, data.dCumulativeConfirmed,
         data.dCumulativeImported, data.dCumulativeLocal, data.dCumulativeRecovered, data.dCumulativeDeaths, data.dCumulativeDischarged, data.dDailyQuarantineOrdersIssued,
-        data.dTotalCloseContacts, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
+        data.dTotalCloseContacts, data.dCompletedQuarantine, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
         data.dQUO_GazettedDorm, data.dQUO_GovtQuarantinedFacilities, data.dQUO_HomeQuarantinedOrder ];
     try {
         let result = await db.query(infoSql, [infoArr]);
