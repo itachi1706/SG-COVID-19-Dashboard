@@ -48,7 +48,7 @@ block content
         function getChartType(elem) {
             console.log(`Processing ${chartType} Chart`);
             switch (chartType.toLowerCase()) {
-                case 'bar': return new google.visualization.BarChart(elem);
+                case 'bar': return new google.charts.Bar(elem);
                 case 'line': return new google.charts.Line(elem);
             }
         }
