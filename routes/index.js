@@ -93,4 +93,29 @@ router.get('/casehistory/data', async function(req, res) {
   res.json(output);
 });
 
+router.get('/graph/cumulative', async function (req, res) {
+  let chartOptions = {chart: {title: 'Cumulative Cases', subtitle: 'Confirmed and Discharged Cases over time'}, series: {0: {color: "#FF0000"}, 1: {color: '#00FF00'}}};
+  res.render('googlegraph', {...defaultObj, route: 'graph', title: 'Cumulative Case Chart - COVID-19 Dashboard (SG)', gt: 'Cumulative Cases Chart',
+    datasource: '/graphdata/cumulative', type: "Line", co: JSON.stringify(chartOptions)});
+});
+
+router.get('/graphdata/cumulative', async function (req, res) {
+  try {
+    let output = await db.query(`SELECT Day, Date, CumulativeConfirmed, CumulativeDischarged FROM ${dbConfig.infoTable}`);
+    let gDataShell = {};
+    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Confirmed Cases", type: "number"}, { id: "dis", label: "Discharged Cases", type: "number" }];
+    let rows = [];
+    output.forEach((d) => {
+      let date = new Date(d.Date);
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.CumulativeConfirmed)}, {v: parseInt(d.CumulativeDischarged)}]});
+    });
+    gDataShell.rows = rows;
+    res.json(gDataShell);
+  } catch (e) {
+    res.status(404);
+    res.json({error: e});
+    res.end();
+  }
+});
+
 module.exports = router;

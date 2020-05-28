@@ -1,0 +1,72 @@
+extends navbar-layout
+
+block content
+    h2= gt
+
+    #graph.google-graph
+
+    script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script.
+        const chartType = "#{type}";
+        let packages = ['corechart'];
+        packages.push(chartType.toLowerCase());
+        google.charts.load('current', {packages: packages});
+        google.charts.setOnLoadCallback(drawChart);
+
+        let gdata, options, chart;
+        let obtainedData = false;
+
+        function drawChart() {
+            let chartOptions = !{co};
+            $.ajax({
+                url: "#{datasource}",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    console.log(data);
+                    gdata = new google.visualization.DataTable(data);
+                    chart = getChartType(document.getElementById('graph'));
+                    chartOptions.height = 700;
+                    options = getChartOptions(chartOptions);
+                    obtainedData = true;
+                    chart.draw(gdata, options)
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log(xhr.responseText)
+                }
+            });
+        }
+        
+        function getChartOptions(options) {
+            console.log(`Obtaining Options for ${chartType} Chart`);
+            switch (chartType.toLowerCase()) {
+                case 'bar': return google.charts.Bar.convertOptions(options);
+                case 'line': return google.charts.Line.convertOptions(options);
+            }
+        }
+        
+        function getChartType(elem) {
+            console.log(`Processing ${chartType} Chart`);
+            switch (chartType.toLowerCase()) {
+                case 'bar': return new google.visualization.BarChart(elem);
+                case 'line': return new google.charts.Line(elem);
+            }
+        }
+
+        //create trigger to resizeEnd event
+        $(window).resize(function () {
+            if (this.resizeTO) clearTimeout(this.resizeTO);
+            this.resizeTO = setTimeout(function () {
+                $(this).trigger('resizeEnd');
+            }, 500);
+        });
+
+        //redraw graph when window resize is completed
+        $(window).on('resizeEnd', function () {
+            if (obtainedData) {
+                chart.draw(gdata, options);
+            }
+        });
+
+
+
