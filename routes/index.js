@@ -105,6 +105,12 @@ router.get('/graph/confirmed', async function (req, res) {
     datasource: '/graphdata/confirmed', type: "Bar", co: JSON.stringify(chartOptions)});
 });
 
+router.get('/graph/discharged', async function (req, res) {
+  let chartOptions = {chart: {title: 'Discharged Cases', subtitle: 'Daily Counts of Cases discharged from hospital'}, series: {0: {color: "#00FF00"}}};
+  res.render('googlegraph', {...defaultObj, route: 'graph', title: 'Discharged Case Chart - COVID-19 Dashboard (SG)', gt: 'Discharged Cases Chart',
+    datasource: '/graphdata/discharged', type: "Bar", co: JSON.stringify(chartOptions)});
+});
+
 router.get('/graphdata/cumulative', async function (req, res) {
   try {
     let output = await db.query(`SELECT Day, Date, CumulativeConfirmed, CumulativeDischarged FROM ${dbConfig.infoTable}`);
@@ -133,6 +139,25 @@ router.get('/graphdata/confirmed', async function (req, res) {
     output.forEach((d) => {
       let date = new Date(d.Date);
       rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ConfirmedCases_Day)}]});
+    });
+    gDataShell.rows = rows;
+    res.json(gDataShell);
+  } catch (e) {
+    res.status(404);
+    res.json({error: e});
+    res.end();
+  }
+});
+
+router.get('/graphdata/discharged', async function (req, res) {
+  try {
+    let output = await db.query(`SELECT Day, Date, Recovered_Day, Deaths_Day FROM ${dbConfig.infoTable}`);
+    let gDataShell = {};
+    gDataShell.cols = [{label: "Time", type: "string"}, { id: "disd", label: "Discharged Cases", type: "number" }];
+    let rows = [];
+    output.forEach((d) => {
+      let date = new Date(d.Date);
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
