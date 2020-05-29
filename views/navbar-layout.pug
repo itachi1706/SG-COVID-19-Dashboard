@@ -52,13 +52,15 @@ html
         include metafooter
         script.
             const firebaseConfig = !{fbConfig};
+            const toRefToken = #{refreshToken};
             function cac() {let chk = document.cookie.split('; ').find(row => row.startsWith('authToken')); if (chk) return chk.split('=')[1]; else return "";}
             $(document).ready(function() {
                 $(`#nb#{route}`).toggleClass('active');
                 firebase.initializeApp(firebaseConfig);
                 console.log("Initialized Firebase");
                 firebase.auth().onAuthStateChanged(function (user) {
-                    if (user) user.getIdToken(false).then(function (idToken) {
+                    if (user)
+                        user.getIdToken(false).then(function (idToken) {
                         let match = true;
                         if (cac().length !== 0)
                             if (cac() !== idToken) match = false;
@@ -67,7 +69,11 @@ html
                             if (!match) window.location.reload(); // Reload to fix authentication
                         }
                         else document.cookie = 'authToken=; path=/;';
-                    });
+                        });
+                    else if (toRefToken) {
+                        document.cookie = 'authToken=; path=/;'; // Not authenticated
+                        window.location.reload();
+                    }
                 });
                 $('#logout').click(function (e) {
                     firebase.auth().signOut().catch(function (err) {

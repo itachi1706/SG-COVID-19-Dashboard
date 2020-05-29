@@ -6,9 +6,11 @@ module.exports.failErrors = {
 
 module.exports.checkAuth = async (req, res, next) => {
     let token = await exports.isAuthenticatedToken(req.cookies.authToken);
+    res.locals.refreshToken = false;
     if (token) {
         res.locals.authed = true;
         if (token !== "-1") res.locals.name = exports.getName(token);
+        else res.locals.refreshToken = true;
         return true;
     }
     res.locals.authed = false;

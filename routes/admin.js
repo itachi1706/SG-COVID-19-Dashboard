@@ -18,6 +18,7 @@ const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(
 async function checkAuth(req, res, next) {
     let authCheck = await auth.checkAuth(req, res, next);
     if (authCheck) {
+        defaultAdmObject.refreshToken = res.locals.refreshToken;
         defaultAdmObject.username = res.locals.name;
         defaultAdmObject.loggedIn = res.locals.authed;
         console.log('[ADMIN] User is authenticated');
