@@ -48,6 +48,10 @@ services:
             - NODE_ENV=production
 ```
 
+## 301 Redirect Note
+If you are exeperiencing a infinite 301 redirect (or Chrome throws a TOO_MANY_REDIRECTS error), try disabling the HTTP -> HTTPS automatic redirect by adding the following environment variable
+`disableHTTPSRedirect = true`
+
 ## Images available
 * **latest**: registry.gitlab.com/itachi1706/sg-covid-19-dashboard:latest  
 * **1.0.0**: registry.gitlab.com/itachi1706/sg-covid-19-dashboard:1-0-0
