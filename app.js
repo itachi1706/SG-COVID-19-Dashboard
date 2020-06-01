@@ -6,6 +6,8 @@ const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const compression = require('compression');
 const favicon = require('serve-favicon');
+const enforceSSL = require('express-sslify');
+const helmet = require('helmet');
 
 const indexRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
@@ -15,6 +17,13 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// HTTPS
+console.log(app.get("env"));
+if (app.get("env") !== "development") {
+  app.use(enforceSSL.HTTPS({trustProtoHeader: true})); // Enforce HTTPS if production and behind proxies like on Heroku
+  app.use(helmet());
+}
 
 app.use(logger('dev'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
