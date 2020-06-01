@@ -21,7 +21,7 @@ app.set('view engine', 'pug');
 // HTTPS
 console.log(app.get("env"));
 if (app.get("env") !== "development") {
-  app.use(enforceSSL.HTTPS({trustProtoHeader: true})); // Enforce HTTPS if production and behind proxies like on Heroku
+  //app.use(enforceSSL.HTTPS({trustProtoHeader: true})); // Enforce HTTPS if production and behind proxies like on Heroku
   app.use(helmet());
 }
 
