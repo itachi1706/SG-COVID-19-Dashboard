@@ -37,8 +37,7 @@ block content
             return `<div>Age: ${data.Age}<br>Gender: ${(data.Gender === "F") ? "Female" : "Male"}<br>
                         Status: ${data.Status}<br>Nationality: ${data.Nationality}<br>Hospital: ${data.PHI} (${data.CurrLoc}), ${data.Cluster},
                         ${data.District}, ${data.Region} Region, Singapore ${data.PostalCode}<br>
-                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(data.ConfirmedDate).toDateString()}<br>
-                        Residential Location: ${data.ResidentialLocation}<br>Visited Places: ${data.VisitedPlaces}</div>`;
+                        Infection Type: ${data.Infected}<br>Place of Infection: ${data.Place}<br>Confirmation Date: ${new Date(data.ConfirmedDate).toDateString()}</div>`;
         }
         $(document).ready(function () {
             let table = $('#caseTable').DataTable({
