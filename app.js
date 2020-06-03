@@ -25,6 +25,17 @@ if (app.get("env") !== "development") {
   app.use(helmet());
 }
 
+// CSP to whitelist domains to load. Must update this if we add new CDNs and stuff
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'unpkg.com', 'cdn.datatables.net', 'www.gstatic.com'],
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'kit.fontawesome.com', 'kit-pro.fontawesome.com', 'code.jquery.com', 'www.gstatic.com', 'unpkg.com', 'cdn.datatables.net', 'cdnjs.cloudflare.com'],
+    fontSrc: ["'self'", 'fonts.gstatic.com'],
+    connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com']
+  }
+}));
+
 app.use(logger('dev'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.json());
