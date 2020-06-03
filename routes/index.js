@@ -6,6 +6,7 @@ const auth = require('../api/firebase-auth');
 const db = require('../api/db');
 const dbUtil = require('../api/db-util');
 const {dbConfig} = require('../config');
+const moment = require('moment');
 
 const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
 
@@ -29,10 +30,13 @@ router.get('/', async function(req, res, next) {
   let icuClass = (delta.HospitalizedICU > 0) ? 'text-red' : 'text-green';
   let wardClass = (delta.HospitalizedStable > 0) ? 'text-red' : 'text-green';
   let cfClass = (delta.HospitalizedOtherArea > 0) ? 'text-red' : 'text-green';
+  let date = data.Date;
+  let dateString = `${moment(date).format('ddd DD MMM YYYY HH:mm:ss')} ${date.toString().split(' ').slice(5).join(' ')}`;
   delta.HospitalizedOtherArea = Math.abs(delta.HospitalizedOtherArea);
   delta.HospitalizedICU = Math.abs(delta.HospitalizedICU);
   delta.HospitalizedStable = Math.abs(delta.HospitalizedStable);
-  res.render('main', { ...defaultObj, title: 'COVID-19 Dashboard (SG)', data: data, delta: delta, iI: icuIcon, iC: icuClass, wI: wardIcon, wC: wardClass, cI: cfIcon, cC: cfClass, route: 'home' });
+  res.render('main', { ...defaultObj, title: 'COVID-19 Dashboard (SG)', data: data, delta: delta, iI: icuIcon, iC: icuClass, wI: wardIcon, wC: wardClass,
+    cI: cfIcon, cC: cfClass, route: 'home', date: dateString });
 });
 
 router.get('/navbartest', function (req, res) {
