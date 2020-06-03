@@ -65,7 +65,7 @@ router.get('/statistics/:type', async function (req, res) {
     let deltas = await db.query(`SELECT * FROM ${dbConfig.deltaTable} WHERE Day > 0 ORDER BY Day DESC`);
     for (let d in output.data) {
       if (!output.data.hasOwnProperty(d)) continue;
-      output.data[d].Date = new Date(output.data[d].Date).toLocaleString();
+      output.data[d].Date = moment(output.data[d].Date).format('DD/MM/YYYY hh:mm A');
       // insert deltas in
       for (let e in output.data[d]) {
         if (!output.data[d].hasOwnProperty(e)) continue;
