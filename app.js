@@ -23,7 +23,7 @@ console.log(app.get("env"));
 if (app.get("env") !== "development") {
   if (!process.env.disableHTTPSRedirect) app.use(enforceSSL.HTTPS({trustProtoHeader: true})); // Enforce HTTPS if production and behind proxies like on Heroku
   app.use(helmet());
-}
+} else app.use(helmet({hsts: false})); // Disable HSTS in development
 
 // CSP to whitelist domains to load. Must update this if we add new CDNs and stuff
 app.use(helmet.contentSecurityPolicy({
