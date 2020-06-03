@@ -35,6 +35,7 @@ app.use(helmet.contentSecurityPolicy({
     connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com']
   }
 }));
+app.use(helmet.referrerPolicy({policy: 'same-origin'}));
 
 app.use(logger('dev'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
