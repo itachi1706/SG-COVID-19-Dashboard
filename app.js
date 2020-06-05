@@ -32,7 +32,7 @@ app.use(helmet.contentSecurityPolicy({
     styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'unpkg.com', 'cdn.datatables.net', 'www.gstatic.com'],
     scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'kit.fontawesome.com', 'kit-pro.fontawesome.com', 'code.jquery.com', 'www.gstatic.com', 'unpkg.com', 'cdn.datatables.net', 'cdnjs.cloudflare.com', 'www.google-analytics.com'],
     fontSrc: ["'self'", 'fonts.gstatic.com'],
-    connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com']
+    connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com', 'securetoken.googleapis.com']
   }
 }));
 app.use(helmet.referrerPolicy({policy: 'same-origin'}));
