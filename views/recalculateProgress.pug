@@ -1,0 +1,31 @@
+extends navbar-layout
+
+block content
+    h2 Recalculating Deltas
+
+    .text-center
+        .text-muted.mb-3 Recalculating in Progress...
+        include loading
+        .text-info.mt-4= 'UUID: '
+            span= uuid
+        .text-info.mt-1= 'Current Status: '
+            span#status= state
+
+    script.
+        function poll(uuid) {
+            let status = $('#status');
+            $.ajax({
+                url: `/admin/updateDelta/${uuid}`,
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    status.text(data.state);
+                    if (data.timestampEnd == null) poll(data.uuid);
+                    else {
+                        status.text(data.state + " (Redirecting in 5 seconds...)");
+                        setTimeout(function () {window.location.href = '/admin/updateDelta'}, 5000);
+                    }
+                }
+            });
+        }
+        $(document).ready(function () {poll('#{uuid}');});

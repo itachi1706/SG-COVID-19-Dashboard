@@ -33,10 +33,10 @@ html
                             .dropdown-menu(aria-labelledby='navbarDDLAdm')
                                 h6.dropdown-header Data Management
                                 a.dropdown-item(href="/admin/add") Add new day
+                                a.dropdown-item(href="/admin/updateDelta") Recalculate Deltas
                                 h6.dropdown-header Coming Soon
                                 a.dropdown-item.disabled(href="#") Edit data
                                 a.dropdown-item.disabled(href="#") Export data
-                                a.dropdown-item.disabled(href="#") Recalculate Deltas
                 if loggedIn
                     .my-2.my-lg-0.form-inline
                         span.navbar-text.mr-2.text-white Logged in as #{username}
