@@ -67,7 +67,7 @@ html
                             if (cac() !== idToken) match = false;
                         if (idToken) {
                             document.cookie = `authToken=${idToken}; path=/;`;
-                            if (!match || !isLoggedIn) window.location.reload(); // Reload to fix authentication
+                            if (!match || (!isLoggedIn && window.location.pathname !== '/login')) window.location.reload(); // Reload to fix authentication
                         }
                         else document.cookie = 'authToken=; path=/;';
                         });
