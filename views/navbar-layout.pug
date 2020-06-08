@@ -53,6 +53,7 @@ html
         script.
             const firebaseConfig = !{fbConfig};
             const toRefToken = #{refreshToken};
+            const isLoggedIn = #{loggedIn};
             function cac() {let chk = document.cookie.split('; ').find(row => row.startsWith('authToken')); if (chk) return chk.split('=')[1]; else return "";}
             $(document).ready(function() {
                 $(`#nb#{route}`).toggleClass('active');
@@ -66,7 +67,7 @@ html
                             if (cac() !== idToken) match = false;
                         if (idToken) {
                             document.cookie = `authToken=${idToken}; path=/;`;
-                            if (!match) window.location.reload(); // Reload to fix authentication
+                            if (!match || !isLoggedIn) window.location.reload(); // Reload to fix authentication
                         }
                         else document.cookie = 'authToken=; path=/;';
                         });
