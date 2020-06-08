@@ -7,10 +7,12 @@ const {dbConfig} = require('../config');
 const db = require('../api/db');
 const dbUtil = require('../api/db-util');
 const utilFunc = require('../util');
+const { v4: uuidv4 } = require('uuid');
 
 const moment = require('moment');
 
 const infoModel = require('../model/info');
+const recalcModel = require('../model/recalculateDelta');
 
 const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
 
@@ -68,6 +70,25 @@ router.post('/add', async (req, res) => {
     res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data), title: 'Confirm Day Stats - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
+async function insertDelta(data) {
+    let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal, 
+    HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths, 
+    CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, CompletedQuarantine, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities, 
+    QUO_HomeQuarantinedOrder) VALUES (?) `; // We can just insert as it will never conflict
+
+    let deltaArr = [ data.Day, data.dConfirmedCases_Day, data.dImportedCase_Day, data.dTotalLocalCase_Day, data.dLocalLinked, data.dLocalUnlinked, data.dHospital_OtherAreas,
+        data.dHospitalizedTotal, data.dHospitalizedStable, data.dHospitalizedICU, data.dHospitalizedOtherArea, data.dRecovered_Day, data.dDeaths_Day, data.dCumulativeConfirmed,
+        data.dCumulativeImported, data.dCumulativeLocal, data.dCumulativeRecovered, data.dCumulativeDeaths, data.dCumulativeDischarged, data.dDailyQuarantineOrdersIssued,
+        data.dTotalCloseContacts, data.dCompletedQuarantine, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
+        data.dQUO_GazettedDorm, data.dQUO_GovtQuarantinedFacilities, data.dQUO_HomeQuarantinedOrder ];
+
+    try {
+        return await db.query(deltaSql, [deltaArr]);
+    } catch (e) {
+        throw e;
+    }
+}
+
 router.post('/add/:day', async (req, res) => {
     console.log(req.body);
     console.log("Adding to Database");
@@ -77,10 +98,10 @@ router.post('/add/:day', async (req, res) => {
     let mysqlDate = moment(date).format('YYYY-MM-DD HH:mm:ss')
     console.log(mysqlDate);
     let infoSql = `INSERT INTO ${dbConfig.infoTable} VALUES (?)`; //We can just insert as it should not conflict
-    let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal, 
-    HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths, 
-    CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, CompletedQuarantine, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities, 
-    QUO_HomeQuarantinedOrder) VALUES (?) `; // We can just insert as it will never conflict
+    //let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal,
+    //HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths,
+    //CumulativeDischarged, DailyQuarantineOrdersIssued, TotalCloseContacts, CompletedQuarantine, Quarantined, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, QUO_GovtQuarantinedFacilities,
+    //QUO_HomeQuarantinedOrder) VALUES (?) `; // We can just insert as it will never conflict
     // Craft array to insert
     let infoArr = [ data.Day, mysqlDate, data.ConfirmedCases_Day, data.ImportedCase_Day, data.TotalLocalCase_Day, data.LocalLinked, data.LocalUnlinked, data.Hospital_OtherAreas,
         data.HospitalizedTotal, data.HospitalizedStable, data.HospitalizedICU, data.HospitalizedOtherArea, data.Recovered_Day, data.Deaths_Day, data.CumulativeConfirmed,
@@ -88,15 +109,15 @@ router.post('/add/:day', async (req, res) => {
         data.TotalCloseContacts, data.Quarantined, data.CompletedQuarantine, data.DORSCON, data.QUO_Pending, data.QUO_TransferHospital, data.QUO_NonGazettedDorm,
         data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null) ];
 
-    let deltaArr = [ data.Day, data.dConfirmedCases_Day, data.dImportedCase_Day, data.dTotalLocalCase_Day, data.dLocalLinked, data.dLocalUnlinked, data.dHospital_OtherAreas,
-        data.dHospitalizedTotal, data.dHospitalizedStable, data.dHospitalizedICU, data.dHospitalizedOtherArea, data.dRecovered_Day, data.dDeaths_Day, data.dCumulativeConfirmed,
-        data.dCumulativeImported, data.dCumulativeLocal, data.dCumulativeRecovered, data.dCumulativeDeaths, data.dCumulativeDischarged, data.dDailyQuarantineOrdersIssued,
-        data.dTotalCloseContacts, data.dCompletedQuarantine, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
-        data.dQUO_GazettedDorm, data.dQUO_GovtQuarantinedFacilities, data.dQUO_HomeQuarantinedOrder ];
+    //let deltaArr = [ data.Day, data.dConfirmedCases_Day, data.dImportedCase_Day, data.dTotalLocalCase_Day, data.dLocalLinked, data.dLocalUnlinked, data.dHospital_OtherAreas,
+    //    data.dHospitalizedTotal, data.dHospitalizedStable, data.dHospitalizedICU, data.dHospitalizedOtherArea, data.dRecovered_Day, data.dDeaths_Day, data.dCumulativeConfirmed,
+    //    data.dCumulativeImported, data.dCumulativeLocal, data.dCumulativeRecovered, data.dCumulativeDeaths, data.dCumulativeDischarged, data.dDailyQuarantineOrdersIssued,
+    //    data.dTotalCloseContacts, data.dCompletedQuarantine, data.dQuarantined, data.dQUO_Pending, data.dQUO_TransferHospital, data.dQUO_NonGazettedDorm,
+    //    data.dQUO_GazettedDorm, data.dQUO_GovtQuarantinedFacilities, data.dQUO_HomeQuarantinedOrder ];
     try {
         let result = await db.query(infoSql, [infoArr]);
         console.log(`Added ${result.affectedRows} rows into Info Table`);
-        let result2 = await db.query(deltaSql, [deltaArr]);
+        let result2 = await insertDelta(data)//await db.query(deltaSql, [deltaArr]);
         console.log(`Added ${result2.affectedRows} rows into Delta Table with ID ${result2.insertId}`);
         console.log(`Finished adding day ${req.params.day}`);
         res.redirect(`/admin/add?success=${req.params.day}`);
@@ -106,6 +127,48 @@ router.post('/add/:day', async (req, res) => {
         if (err.code === 'ER_DUP_ENTRY') res.redirect(`/admin/add?fail=${req.params.day}`);
         else res.redirect('/admin/add');
     }
-})
+});
+
+const updateStatus = {};
+
+async function recalc(uuid) {
+    let data = updateStatus[uuid];
+    data.start();
+    while (data.currentDay <= data.endDay) {
+        console.log(`Processing Day ${data.currentDay}`);
+        let dbData = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day >= ${data.currentDay - 1} LIMIT 2`);
+        let delta = data.recalculate(dbData[0], dbData[1]);
+        delta.Day = data.currentDay;
+        await db.query(`DELETE FROM ${dbConfig.deltaTable} WHERE Day = ${data.currentDay}`);
+        await insertDelta(delta);
+        data.step();
+    }
+    data.complete();
+}
+
+router.get('/updateDelta', async (req, res) => {
+    let result = await db.query(`SELECT Day FROM ${dbConfig.infoTable} ORDER BY Day DESC LIMIT 1`);
+    res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day});
+});
+
+router.post('/updateDelta/:fromDay', async (req, res) => {
+    console.log(`Recalculating from Day ${req.params.fromDay} to Day ${req.body.end}`);
+    let identifier = uuidv4();
+    console.log(`Associating with ${identifier}`);
+    let data = new recalcModel(identifier, req.params.fromDay, req.body.end);
+    updateStatus[identifier] = data;
+    //console.log(data);
+    res.render('recalculateProgress', {...defaultAdmObject, uuid: data.uuid, state: data.state});
+    setTimeout(function () {recalc(identifier);}, 5000);
+    //setTimeout(function () {updateStatus[identifier].start();}, 5000)
+    //setTimeout(function () {updateStatus[identifier].step();}, 7000)
+    //setTimeout(function () {updateStatus[identifier].endStep();}, 9000)
+});
+
+router.get('/updateDelta/:uuid', async (req, res) => {
+    //console.log('Size of recalcaulate array: ' + Object.keys(updateStatus).length);
+    //console.log(updateStatus[req.params.uuid]);
+    res.json(updateStatus[req.params.uuid]);
+});
 
 module.exports = router;
