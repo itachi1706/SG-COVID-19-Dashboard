@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
-const compression = require('compression');
+const shrinkRay = require('shrink-ray-current');
 const favicon = require('serve-favicon');
 const enforceSSL = require('express-sslify');
 const helmet = require('helmet');
@@ -44,7 +44,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(compression());
+app.use(shrinkRay({brotli:{quality:6},filter:shrinkRay.filter})); // See Alorel/shrink-ray#52 for reason why we need filter
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
