@@ -18,10 +18,11 @@ async function checkAuth(req, res, next) {
   next();
 }
 
+// noinspection JSCheckFunctionSignatures
 router.use('/', checkAuth);
 
 /* GET home page. */
-router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res) {
   let data = await dbUtil.getLastDay();
   let delta = await dbUtil.getDayDelta(data.Day);
   let icuIcon = (delta.HospitalizedICU > 0) ? '▲' : '▼';
@@ -94,81 +95,6 @@ router.get('/casehistory/data', async function(req, res) {
     console.log(e);
   }
   res.json(output);
-});
-
-router.get('/graph/cumulative', async function (req, res) {
-  let chartOptions = {chart: {title: 'Cumulative Cases', subtitle: 'Confirmed and Discharged Cases over time'}, series: {0: {color: "#FF0000"}, 1: {color: '#00FF00'}}};
-  res.render('googlegraph', {...defaultObj, route: 'graph', title: 'Cumulative Case Chart - COVID-19 Dashboard (SG)', gt: 'Cumulative Cases Chart',
-    datasource: '/graphdata/cumulative', type: "Line", co: JSON.stringify(chartOptions)});
-});
-
-router.get('/graph/confirmed', async function (req, res) {
-  let chartOptions = {chart: {title: 'Confirmed Cases', subtitle: 'Daily Counts of Confirmed Cases'}, series: {0: {color: "#FF0000"}}};
-  res.render('googlegraph', {...defaultObj, route: 'graph', title: 'Confirmed Case Chart - COVID-19 Dashboard (SG)', gt: 'Confirmed Cases Chart',
-    datasource: '/graphdata/confirmed', type: "Bar", co: JSON.stringify(chartOptions)});
-});
-
-router.get('/graph/discharged', async function (req, res) {
-  let chartOptions = {chart: {title: 'Discharged Cases', subtitle: 'Daily Counts of Cases discharged from hospital'}, series: {0: {color: "#00FF00"}}};
-  res.render('googlegraph', {...defaultObj, route: 'graph', title: 'Discharged Case Chart - COVID-19 Dashboard (SG)', gt: 'Discharged Cases Chart',
-    datasource: '/graphdata/discharged', type: "Bar", co: JSON.stringify(chartOptions)});
-});
-
-router.get('/graphdata/cumulative', async function (req, res) {
-  try {
-    let output = await db.query(`SELECT Day, Date, CumulativeConfirmed, CumulativeDischarged FROM ${dbConfig.infoTable}`);
-    let gDataShell = {};
-    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Confirmed Cases", type: "number"}, { id: "dis", label: "Discharged Cases", type: "number" }];
-    let rows = [];
-    output.forEach((d) => {
-      let date = new Date(d.Date);
-      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.CumulativeConfirmed)}, {v: parseInt(d.CumulativeDischarged)}]});
-    });
-    gDataShell.rows = rows;
-    res.json(gDataShell);
-  } catch (e) {
-    res.status(404);
-    res.json({error: e});
-    res.end();
-  }
-});
-
-router.get('/graphdata/confirmed', async function (req, res) {
-  try {
-    let output = await db.query(`SELECT Day, Date, ConfirmedCases_Day FROM ${dbConfig.infoTable}`);
-    let gDataShell = {};
-    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnfd", label: "Confirmed Cases", type: "number"}];
-    let rows = [];
-    output.forEach((d) => {
-      let date = new Date(d.Date);
-      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ConfirmedCases_Day)}]});
-    });
-    gDataShell.rows = rows;
-    res.json(gDataShell);
-  } catch (e) {
-    res.status(404);
-    res.json({error: e});
-    res.end();
-  }
-});
-
-router.get('/graphdata/discharged', async function (req, res) {
-  try {
-    let output = await db.query(`SELECT Day, Date, Recovered_Day, Deaths_Day FROM ${dbConfig.infoTable}`);
-    let gDataShell = {};
-    gDataShell.cols = [{label: "Time", type: "string"}, { id: "disd", label: "Discharged Cases", type: "number" }];
-    let rows = [];
-    output.forEach((d) => {
-      let date = new Date(d.Date);
-      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
-    });
-    gDataShell.rows = rows;
-    res.json(gDataShell);
-  } catch (e) {
-    res.status(404);
-    res.json({error: e});
-    res.end();
-  }
 });
 
 module.exports = router;

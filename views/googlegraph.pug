@@ -21,7 +21,7 @@ block content
         function drawChart() {
             let chartOptions = !{co};
             $.ajax({
-                url: "#{datasource}",
+                url: "/graph/data/#{datasource}",
                 dataType: "json",
                 async: true,
                 success: function (data) {
