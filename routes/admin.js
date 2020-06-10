@@ -31,6 +31,7 @@ async function checkAuth(req, res, next) {
     res.redirect('/login?err=1');
 }
 
+// noinspection JSCheckFunctionSignatures
 router.use('/', checkAuth);
 
 router.get('/', function (req, res) {
