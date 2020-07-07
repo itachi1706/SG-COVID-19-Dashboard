@@ -89,18 +89,18 @@ block content
                     label(for="DORSCON").bmd-label-floating= model.DORSCON
                     input.form-control#DORSCON(name='DORSCON', type='text', readonly=true, value= data.DORSCON)
                 .form-group.ml-lg-3
-                    label(for="QUOPending").bmd-label-floating QUO - Pending
+                    label(for="QUOGD").bmd-label-floating= model.QUO_GazettedDorm
+                    input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', readonly=true, value= data.QUO_GazettedDorm)
+                .form-group.ml-lg-3
+                    label(for="QUOPending").bmd-label-floating= model.QUO_Pending
                     input.form-control#QUOPending(type='number', name='QUO_Pending', readonly=true, value= data.QUO_Pending)
                 .form-group.ml-lg-3
-                    label(for="QUOTransHos").bmd-label-floating QUO - Transfer Hospital
+                    label(for="QUOTransHos").bmd-label-floating= model.QUO_TransferHospital
                     input.form-control#QUOTransHos(type='number', name='QUO_TransferHospital', readonly=true, value= data.QUO_TransferHospital)
-                .form-group.ml-lg-3
-                    label(for="QUONonGD").bmd-label-floating QUO - Non Gazetted Dorms
-                    input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', readonly=true, value= data.QUO_NonGazettedDorm)
             .form-inline
                 .form-group
-                    label(for="QUOGD").bmd-label-floating QUO - Gazetted Dorms
-                    input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', readonly=true, value= data.QUO_GazettedDorm)
+                    label(for="QUONonGD").bmd-label-floating= model.QUO_NonGazettedDorm
+                    input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', readonly=true, value= data.QUO_NonGazettedDorm)
                 .form-group.ml-lg-3
                     label(for="QUOGovtQF").bmd-label-floating QUO - GQF
                     input.form-control#QUOGovtQF(type='number', name='QUO_GovtQuarantinedFacilities', readonly=true, value= data.QUO_GovtQuarantinedFacilities)
@@ -182,6 +182,9 @@ block content
                     label(for="dCQ").bmd-label-floating= model.CompletedQuarantine
                     input.form-control#dCQ(type='number', name='dCompletedQuarantine', readonly=true, data-posinc=true)
                 .form-group.ml-lg-3
+                    label(for="dQUOGD").bmd-label-floating= model.QUO_GazettedDorm
+                    input.form-control#dQUOGD(type='number', name='dQUO_GazettedDorm', readonly=true)
+                .form-group.ml-lg-3
                     label(for="dQUOP").bmd-label-floating= model.QUO_Pending
                     input.form-control#dQUOP(type='number', name='dQUO_Pending', readonly=true)
                 .form-group.ml-lg-3
@@ -190,9 +193,6 @@ block content
                 .form-group.ml-lg-3
                     label(for="dQUONGD").bmd-label-floating= model.QUO_NonGazettedDorm
                     input.form-control#dQUONGD(type='number', name='dQUO_NonGazettedDorm', readonly=true)
-                .form-group.ml-lg-3
-                    label(for="dQUOGD").bmd-label-floating= model.QUO_GazettedDorm
-                    input.form-control#dQUOGD(type='number', name='dQUO_GazettedDorm', readonly=true)
                 .form-group.ml-lg-3
                     label(for="dQUOGQF").bmd-label-floating QUO - GQF
                     input.form-control#dQUOGQF(type='number', name='dQUO_GovtQuarantinedFacilities', readonly=true)
