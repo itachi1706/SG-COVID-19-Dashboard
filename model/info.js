@@ -27,7 +27,7 @@ const model = {
     'QUO_Pending': 'QUO - Pending',
     'QUO_TransferHospital': 'QUO - Transfer Hospital',
     'QUO_NonGazettedDorm': 'QUO - Non Gazetted Dorms',
-    'QUO_GazettedDorm': 'QUO - Gazetted Dorms',
+    'QUO_GazettedDorm': 'QUO - Pending Extension',
     'QUO_GovtQuarantinedFacilities': 'QUO - Government Quarantine Facilities',
     'QUO_HomeQuarantinedOrder': 'QUO - Home Quarantine Orders',
     'Remarks': 'Remarks'

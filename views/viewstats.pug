@@ -2,6 +2,7 @@ extends navbar-layout
 
 block content
     h2 View Daily Statistics
+    .text-warning As of 6 July 2020, QUO (Gazetted Dorm) has been renamed QUO (Pending Extension)
     table#statsTable.table
 
     // DataTables
@@ -91,7 +92,7 @@ block content
                     { title: "QUO (Pending)", data: "QUO_Pending" },
                     { title: "QUO (Transfer Hospital)", data: "QUO_TransferHospital" },
                     { title: "QUO (Non Gazetted Dorms)", data: "QUO_NonGazettedDorm" },
-                    { title: "QUO (Gazetted Dorms)", data: "QUO_GazettedDorm" },
+                    { title: "QUO (Pending Extension)", data: "QUO_GazettedDorm" },
                     { title: "QUO (GQF)", data: "QUO_GovtQuarantinedFacilities" },
                     { title: "QUO (HQO)", data: "QUO_HomeQuarantinedOrder" },
                     { title: "Remarks", data: "Remarks" },
