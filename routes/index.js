@@ -28,16 +28,19 @@ router.get('/', async function(req, res) {
   let icuIcon = (delta.HospitalizedICU > 0) ? '▲' : '▼';
   let wardIcon = (delta.HospitalizedStable > 0) ? '▲' : '▼';
   let cfIcon = (delta.HospitalizedOtherArea > 0) ? '▲' : '▼';
+  let cTIcon = (delta.Hospital_OtherAreas > 0) ? '▲' : '▼';
   let icuClass = (delta.HospitalizedICU > 0) ? 'text-red' : 'text-green';
   let wardClass = (delta.HospitalizedStable > 0) ? 'text-red' : 'text-green';
   let cfClass = (delta.HospitalizedOtherArea > 0) ? 'text-red' : 'text-green';
+  let cTClass = (delta.Hospital_OtherAreas > 0) ? 'text-red' : 'text-green';
   let date = data.Date;
   let dateString = `${moment(date).format('ddd DD MMM YYYY HH:mm:ss')} ${date.toString().split(' ').slice(5).join(' ')}`;
   delta.HospitalizedOtherArea = Math.abs(delta.HospitalizedOtherArea);
   delta.HospitalizedICU = Math.abs(delta.HospitalizedICU);
   delta.HospitalizedStable = Math.abs(delta.HospitalizedStable);
+  delta.Hospital_OtherAreas = Math.abs(delta.Hospital_OtherAreas);
   res.render('main', { ...defaultObj, title: 'COVID-19 Dashboard (SG)', data: data, delta: delta, iI: icuIcon, iC: icuClass, wI: wardIcon, wC: wardClass,
-    cI: cfIcon, cC: cfClass, route: 'home', date: dateString });
+    cI: cfIcon, cC: cfClass, cTI: cTIcon, cTC: cTClass, route: 'home', date: dateString });
 });
 
 router.get('/navbartest', function (req, res) {
