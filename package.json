@@ -1,6 +1,39 @@
 {
   "name": "sg-covid-19-dashboard",
   "version": "1.1.0",
+  "description": "A dashboard for analyzing and displaying information about COVID-19 in Singapore",
+  "homepage": "https://gitlab.com/itachi1706/sg-covid-19-dashboard",
+  "keywords": [
+    "covid19",
+    "sg",
+    "dashboard"
+  ],
+  "author": "Kenneth Soh <kenneth@itachi1706.com>",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/itachi1706/sg-covid-19-dashboard.git"
+  },
+  "main": "bin/www.js",
+  "bugs": {
+    "url": "https://gitlab.com/itachi1706/sg-covid-19-dashboard/-/issues",
+    "email": "incoming+itachi1706-sg-covid-19-dashboard-18275004-issue-@incoming.gitlab.com"
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "12.18.2",
+    "npm": "6.14.5"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "ia32",
+    "arm"
+  ],
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
