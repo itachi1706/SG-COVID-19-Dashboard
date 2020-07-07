@@ -50,6 +50,11 @@ block content
                 b= 'Community Facilities Cases: '
                 span= data.HospitalizedOtherArea
                 span(class=`${cC}`)  (#{cI}#{delta.HospitalizedOtherArea})
+            br
+            span
+                b= 'Active Cases: '
+                span= data.Hospital_OtherAreas
+                span(class=`${cTC}`)  (#{cTI}#{delta.Hospital_OtherAreas})
 
         .mt-3.font-italic.font-weight-bold Data Updated as of #{date}
 
