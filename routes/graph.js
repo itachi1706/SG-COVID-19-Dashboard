@@ -25,6 +25,12 @@ router.get('/cumulative', async function (req, res) {
     datasource: 'cumulative', type: "Line", co: JSON.stringify(chartOptions)});
 });
 
+router.get('/active', async function (req, res) {
+  let chartOptions = {chart: {title: 'Active Cases', subtitle: 'Active cases in Singapore'}, series: {0: {color: "#FF0000"}, 1: {color: "#FFDF00"}, 2: {color: "#00FF00"}}};
+  res.render('googlegraph', {...defaultGraphObj, title: 'Active Cases Chart - COVID-19 Dashboard (SG)', gt: 'Active Cases Chart',
+    datasource: 'active', type: "Line", co: JSON.stringify(chartOptions)});
+});
+
 router.get('/confirmed', async function (req, res) {
   let chartOptions = {chart: {title: 'Confirmed Cases', subtitle: 'Daily Counts of Confirmed Cases'}, series: {0: {color: "#FF0000"}}};
   res.render('googlegraph', {...defaultGraphObj, title: 'Confirmed Case Chart - COVID-19 Dashboard (SG)', gt: 'Confirmed Cases Chart',
@@ -46,6 +52,25 @@ router.get('/data/cumulative', async function (req, res) {
     output.forEach((d) => {
       let date = new Date(d.Date);
       rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.CumulativeConfirmed)}, {v: parseInt(d.CumulativeDischarged)}]});
+    });
+    gDataShell.rows = rows;
+    res.json(gDataShell);
+  } catch (e) {
+    res.status(404);
+    res.json({error: e});
+    res.end();
+  }
+});
+
+router.get('/data/active', async function (req, res) {
+  try {
+    let output = await db.query(`SELECT Day, Date, HospitalizedStable, HospitalizedICU, HospitalizedOtherArea FROM ${dbConfig.infoTable}`);
+    let gDataShell = {};
+    gDataShell.cols = [{label: "Time", type: "string"}, { id: "icu", label: "ICU", type: "number" }, { id: "ward", label: "Warded", type: "number" }, { id: "cf", label: "Community Facilities", type: "number" }];
+    let rows = [];
+    output.forEach((d) => {
+      let date = new Date(d.Date);
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.HospitalizedICU)}, {v: parseInt(d.HospitalizedStable)}, {v: parseInt(d.HospitalizedOtherArea)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
