@@ -19,40 +19,49 @@ include:
 sast:
   rules:
     - when: on_success
+  needs: []
 
 license_scanning:
   rules:
     - when: on_success
+  needs: []
 
 container_scanning:
   rules:
     - when: on_success
+  needs: ["Container Scan Docker"]
 
 dependency_scanning:
   dependencies:
     - Install Node Dependencies
   rules:
     - when: on_success
+  needs: ["Install Node Dependencies"]
 
 eslint-sast:
   rules:
     - when: on_success
+  needs: []
 
 gemnasium-dependency_scanning:
   rules:
     - when: on_success
+  needs: []
 
 nodejs-scan-sast:
   rules:
     - when: on_success
+  needs: []    
 
 retire-js-dependency_scanning:
   rules:
     - when: on_success
+  needs: []
 
 secrets-sast:
   rules:
     - when: on_success
+  needs: []
 
 # Workflow Default Settings
 workflow:
@@ -141,6 +150,7 @@ Cleanup Container Scan Docker Image:
     - chmod a+x /usr/local/bin/reg
   script:
     - /usr/local/bin/reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $IMAGE_TAG
+  needs: ["container_scanning"]
 
 # Deploy to heroku manually
 Deploy to Heroku Prod:
