@@ -55,11 +55,11 @@ router.get('/quosummary', async function (req, res) {
     datasource: 'quosummary', type: "Line", co: JSON.stringify(chartOptions)});
 });
 
-/*router.get('/wip', async function (req, res) {
-  let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}}};
-  res.render('googlegraph', {...defaultGraphObj, title: 'Quarantine Orders Issued Summary Chart - COVID-19 Dashboard (SG)', gt: 'Quarantine Orders Issued Summary',
-    datasource: 'quosummary', type: "Line", co: JSON.stringify(chartOptions)});
-});*/
+router.get('/quodaily', async function (req, res) {
+  let chartOptions = {chart: {title: 'Daily Quarantine Orders Issued', subtitle: 'Total number of Quarantine Orders issued daily'}, series: {0: {color: "#0000FF"}}};
+  res.render('googlegraph', {...defaultGraphObj, title: 'Daily Quarantine Orders Issued Chart - COVID-19 Dashboard (SG)', gt: 'Daily Quarantine Orders Issued',
+    datasource: 'quodaily', type: "Bar", co: JSON.stringify(chartOptions)});
+});
 
 /*router.get('/wip', async function (req, res) {
   let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}}};
@@ -182,15 +182,15 @@ router.get('/data/quosummary', async function (req, res) {
   }
 });
 
-/*router.get('/data/confirmeddischarged', async function (req, res) {
+router.get('/data/quodaily', async function (req, res) {
   try {
-    let output = await db.query(`SELECT Day, Date, ConfirmedCases_Day, Recovered_Day, Deaths_Day FROM ${dbConfig.infoTable}`);
+    let output = await db.query(`SELECT Day, Date, DailyQuarantineOrdersIssued FROM ${dbConfig.infoTable}`);
     let gDataShell = {};
-    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Confirmed Cases", type: "number"}, { id: "disd", label: "Discharged Cases", type: "number" }];
+    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Orders Issued", type: "number"}];
     let rows = [];
     output.forEach((d) => {
       let date = new Date(d.Date);
-      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ConfirmedCases_Day)}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.DailyQuarantineOrdersIssued)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
@@ -199,7 +199,7 @@ router.get('/data/quosummary', async function (req, res) {
     res.json({error: e});
     res.end();
   }
-});*/
+});
 
 /*router.get('/data/confirmeddischarged', async function (req, res) {
   try {
