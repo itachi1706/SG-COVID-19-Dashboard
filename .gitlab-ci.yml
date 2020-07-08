@@ -149,7 +149,7 @@ Cleanup Container Scan Docker Image:
     - echo "$REG_SHA256  /usr/local/bin/reg" | sha256sum -c -
     - chmod a+x /usr/local/bin/reg
   script:
-    - /usr/local/bin/reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $IMAGE_TAG
+    - /usr/local/bin/reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $IMAGE_TAG || true
   needs: ["container_scanning"]
 
 # Deploy to heroku manually

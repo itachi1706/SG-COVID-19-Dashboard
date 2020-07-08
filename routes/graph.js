@@ -61,11 +61,11 @@ router.get('/quodaily', async function (req, res) {
     datasource: 'quodaily', type: "Bar", co: JSON.stringify(chartOptions)});
 });
 
-/*router.get('/wip', async function (req, res) {
-  let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}}};
-  res.render('googlegraph', {...defaultGraphObj, title: 'Quarantine Orders Issued Summary Chart - COVID-19 Dashboard (SG)', gt: 'Quarantine Orders Issued Summary',
-    datasource: 'quosummary', type: "Line", co: JSON.stringify(chartOptions)});
-});*/
+router.get('/quodetail', async function (req, res) {
+  let chartOptions = {chart: {title: 'Active Quarantine Orders by Categories', subtitle: 'View of current Quarantine Orders and what category they belong to'}, series: {0: {color: "#FF0000"}, 1: {color: "#178C09"}, 2: {color: "#FFDF00"}, 3: {color: "#0000FF"}, 4: {color: "#810AA1"}, 5: {color: "#A10A81"}}};
+  res.render('googlegraph', {...defaultGraphObj, title: 'Active Quarantine Orders (Categorized) Chart - COVID-19 Dashboard (SG)', gt: 'Active Quarantine Orders (Categorized) Chart',
+    datasource: 'quodetail', type: "Line", co: JSON.stringify(chartOptions)});
+});
 
 router.get('/data/cumulative', async function (req, res) {
   try {
@@ -201,15 +201,19 @@ router.get('/data/quodaily', async function (req, res) {
   }
 });
 
-/*router.get('/data/confirmeddischarged', async function (req, res) {
+router.get('/data/quodetail', async function (req, res) {
   try {
-    let output = await db.query(`SELECT Day, Date, ConfirmedCases_Day, Recovered_Day, Deaths_Day FROM ${dbConfig.infoTable}`);
+    let output = await db.query(`SELECT Day, Date, QUO_Pending, QUO_TransferHospital, QUO_NonGazettedDorm, QUO_GazettedDorm, 
+       QUO_GovtQuarantinedFacilities, QUO_HomeQuarantinedOrder FROM ${dbConfig.infoTable}`);
     let gDataShell = {};
-    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Confirmed Cases", type: "number"}, { id: "disd", label: "Discharged Cases", type: "number" }];
+    gDataShell.cols = [{label: "Time", type: "string"}, {id: "cnf", label: "Pending Extension/Gazetted Dorms", type: "number"}, { id: "disd", label: "Pending Quarantine Location", type: "number" },
+      {id: "cnf", label: "Transfer to Hospital", type: "number"}, { id: "disd", label: "Non Gazetted Dorms", type: "number" }, {id: "cnf", label: "Government Quarantine Facilities", type: "number"},
+      { id: "disd", label: "Home Quarantine Orders", type: "number" }];
     let rows = [];
     output.forEach((d) => {
       let date = new Date(d.Date);
-      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ConfirmedCases_Day)}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.QUO_GazettedDorm)}, {v: parseInt(d.QUO_Pending)}, {v: parseInt(d.QUO_TransferHospital)},
+          {v: parseInt(d.QUO_NonGazettedDorm)}, {v: parseInt(d.QUO_GovtQuarantinedFacilities)}, {v: parseInt(d.QUO_HomeQuarantinedOrder)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
@@ -218,6 +222,6 @@ router.get('/data/quodaily', async function (req, res) {
     res.json({error: e});
     res.end();
   }
-});*/
+});
 
 module.exports = router;
