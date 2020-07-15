@@ -7,6 +7,7 @@ cache:
 stages:
   - build
   - test
+  - Docker Image Build
   - deploy
 
 # GitLab-CI Security Scans
@@ -70,6 +71,23 @@ workflow:
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH
 
+Install BuildX:
+  image: docker:git
+  stage: build
+  variables:
+    GIT_STRATEGY: none
+  artifacts:
+    paths:
+      - buildx
+    expire_in: 6h
+  services:
+    - docker:dind
+  script:
+    - export DOCKER_BUILDKIT=1
+    - git clone git://github.com/docker/buildx ./docker-buildx
+    - docker build --platform=local -o . ./docker-buildx
+
+
 # Node.JS Testing
 Install Node Dependencies:
   image: node:alpine
@@ -77,21 +95,99 @@ Install Node Dependencies:
   script: npm i
 
 # Build docker containers
-Docker Master:
+.install_buildx: &installbuildx
   # Official docker image.
   image: docker:latest
+  dependencies:
+    - Install Node Dependencies
+    - Install BuildX
+  services:
+    - name: docker:dind
+      command: ["--experimental"]
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - mkdir -p ~/.docker/cli-plugins
+    - mv buildx ~/.docker/cli-plugins/docker-buildx
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --use --driver docker-container --name mybuilder
+    - docker buildx inspect --bootstrap
+
+.gen_docker_images_master: &gendockerimagesmaster
+  <<: *installbuildx
+  stage: Docker Image Build
+  script:
+    - docker buildx build --platform $PLATFORMS --progress=plain --push -t $IMAGE_TAG .
+  needs: ["Install Node Dependencies", "Install BuildX"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: always
+    - when: never
+
+.gen_docker_images_tags: &gendockerimagestags
+  <<: *installbuildx
+  stage: Docker Image Build
+  script:
+    - docker buildx build --platform $PLATFORMS --progress=plain --push -t $IMAGE_TAG .
+  needs: ["Install Node Dependencies", "Install BuildX"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_COMMIT_TAG != null'
+      when: always
+    - when: never
+
+Build ARMv6 Docker Image Master:
+  <<: *gendockerimagesmaster
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:armv6
+    PLATFORMS: linux/arm/v6
+  timeout: 3h
+
+Build ARMv7a Docker Image Master:
+  <<: *gendockerimagesmaster
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:armv7a
+    PLATFORMS: linux/arm/v7
+  timeout: 3h
+
+Build ARM64 Docker Image Master:
+  <<: *gendockerimagesmaster
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:arm64
+    PLATFORMS: linux/arm64
+
+Build x86 Docker Image Master:
+  <<: *gendockerimagesmaster
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:x86
+    PLATFORMS: linux/386
+
+Build x86_64 Docker Image Master:
+  <<: *gendockerimagesmaster
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:x64
+    PLATFORMS: linux/amd64
+
+Docker Merge Manifest Master:
+  <<: *installbuildx
   stage: deploy
   dependencies:
     - Install Node Dependencies
-  services:
-    - docker:dind
+    - Install BuildX
+    - Build ARMv6 Docker Image Master
+    - Build ARMv7a Docker Image Master
+    - Build ARM64 Docker Image Master
+    - Build x86 Docker Image Master
+    - Build x86_64 Docker Image Master
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG:x64 $IMAGE_TAG:x86 $IMAGE_TAG:arm64 $IMAGE_TAG:armv7a $IMAGE_TAG:armv6
+    - docker buildx imagetools inspect $IMAGE_TAG
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
@@ -106,7 +202,7 @@ Build Docker:
   dependencies:
     - Install Node Dependencies
   services:
-    - docker:dind
+    - name: docker:dind
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
@@ -118,6 +214,63 @@ Build Docker:
     - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
       when: never
     - when: always
+
+Build ARMv6 Docker Image Tagged:
+  <<: *gendockerimagestags
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-armv6
+    PLATFORMS: linux/arm/v6
+  timeout: 3h
+
+Build ARMv7a Docker Image Tagged:
+  <<: *gendockerimagestags
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-armv7a
+    PLATFORMS: linux/arm/v7
+  timeout: 3h
+
+Build ARM64 Docker Image Tagged:
+  <<: *gendockerimagestags
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-arm64
+    PLATFORMS: linux/arm64
+
+Build x86 Docker Image Tagged:
+  <<: *gendockerimagestags
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-x86
+    PLATFORMS: linux/386
+
+Build x86_64 Docker Image Tagged:
+  <<: *gendockerimagestags
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-x64
+    PLATFORMS: linux/amd64
+
+Docker Merge Manifest Tagged:
+  <<: *installbuildx
+  stage: deploy
+  dependencies:
+    - Install Node Dependencies
+    - Install BuildX
+    - Build ARMv6 Docker Image Tagged
+    - Build ARMv7a Docker Image Tagged
+    - Build ARM64 Docker Image Tagged
+    - Build x86 Docker Image Tagged
+    - Build x86_64 Docker Image Tagged
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG
+  script:
+    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG-x64 $IMAGE_TAG-x86 $IMAGE_TAG-arm64 $IMAGE_TAG-armv7a $IMAGE_TAG-armv6
+    - docker buildx imagetools inspect $IMAGE_TAG
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: never
+    - if: '$CI_COMMIT_TAG != null'
+      when: always
+    - when: never
 
 Container Scan Docker:
   # Official docker image.

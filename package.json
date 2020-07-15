@@ -32,7 +32,8 @@
   "cpu": [
     "x64",
     "ia32",
-    "arm"
+    "arm",
+    "arm64"
   ],
   "private": true,
   "scripts": {
