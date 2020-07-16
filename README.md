@@ -30,7 +30,7 @@ services:
             - "443:3000"
         environment:
             - dbDatabase=<Database Name>
-            - dbDelta=<Database Delta Name>
+            - dbDelta=<Database Delta Table Name>
             - dbHost=<Database Host Name>
             - dbInfo=<Database Info Table Name>
             - dbPassword=<Database User Password>
