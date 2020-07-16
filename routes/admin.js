@@ -8,6 +8,7 @@ const db = require('../api/db');
 const dbUtil = require('../api/db-util');
 const utilFunc = require('../util');
 const { v4: uuidv4 } = require('uuid');
+const csvConverter = require('json-2-csv');
 
 const moment = require('moment');
 
@@ -156,5 +157,38 @@ router.post('/updateDelta/:fromDay', async (req, res) => {
 router.get('/updateDelta/:uuid', async (req, res) => {
     res.json(updateStatus[req.params.uuid]);
 });
+
+router.get('/exportData', async (req, res) => {
+    res.render('exportData', {...defaultAdmObject, title: 'Export Data - Admin Panel - COVID-19 Dashboard (SG)'});
+});
+
+router.post('/exportData', async (req, res) => {
+    console.log(req.body);
+    let expType = req.body.exportType;
+    let tableExport = req.body.table;
+    let sql = `SELECT * FROM ${dbConfig.infoTable}`;
+    if (tableExport === 'delta') sql = `SELECT * FROM ${dbConfig.deltaTable}`;
+    let fileName = `${tableExport}-${new Date().getTime()}`;
+
+    try {
+        let data = await db.query(sql);
+        if (expType === 'csv') {
+            res.writeHead(200, {'Content-Type': 'text/csv', 'Content-Disposition': 'attachment; filename=' + fileName + '.csv'});
+            data = await convertToCsv(data);
+        } else {
+            // Allow JSON download
+            res.writeHead(200, {'Content-Type': 'text/json', 'Content-Disposition': 'attachment; filename=' + fileName + '.json'});
+            data = JSON.stringify(data);
+        }
+        res.end(data);
+    } catch (e) {
+        throw e;
+    }
+});
+
+async function convertToCsv(data) {
+    return await csvConverter.json2csvAsync(data, {checkSchemaDifferences: true, emptyFieldValue: ""});
+}
+
 
 module.exports = router;

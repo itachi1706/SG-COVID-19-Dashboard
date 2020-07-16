@@ -1,0 +1,24 @@
+extends navbar-layout
+
+block content
+    h2 Export Data
+    p.text-info Exports data from the tables in CSV or JSON format
+
+    form#test.mt-5(action=`/admin/exportData` method='post')
+        h4 Export Type
+        label.radio-inline.mr-5
+            input#radioCsv(type='radio', name='exportType', value='csv')
+            | CSV
+        label.radio-inline
+            input#radioJson(type='radio', name='exportType', value='json')
+            | JSON
+        h4.mt-2 Table to Export
+        label.radio-inline.mr-5
+            input#radioInfo(type='radio', name='table', value='info')
+            | Info Table
+        label.radio-inline
+            input#radioDelta(type='radio', name='table', value='delta')
+            | Delta Table
+
+        .form-group
+            button.btn.btn-primary.btn-raised.btn-success(type="submit") Export
