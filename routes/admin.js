@@ -159,7 +159,7 @@ router.get('/updateDelta/:uuid', async (req, res) => {
 });
 
 router.get('/exportData', async (req, res) => {
-    res.render('exportData', {...defaultAdmObject, title: 'Export (WIP)'});
+    res.render('exportData', {...defaultAdmObject, title: 'Export Data - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
 router.post('/exportData', async (req, res) => {
