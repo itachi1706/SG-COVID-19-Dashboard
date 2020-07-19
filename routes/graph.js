@@ -49,6 +49,12 @@ router.get('/confirmeddischarged', async function (req, res) {
     datasource: 'confirmeddischarged', type: "Line", co: JSON.stringify(chartOptions)});
 });
 
+router.get('/casetypes', async function (req, res) {
+  let chartOptions = {chart: {title: 'Types of Cases', subtitle: 'Split out view of cases to see if its local or imported'}, series: {0: {color: "#FF0000"}, 1: {color: "#0000FF"}}};
+  res.render('googlegraph', {...defaultGraphObj, title: 'Case Types Chart - COVID-19 Dashboard (SG)', gt: 'Case Types Chart',
+    datasource: 'casetypes', type: "Line", co: JSON.stringify(chartOptions)});
+});
+
 router.get('/quosummary', async function (req, res) {
   let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}, 2: {color: "#0000FF"}}};
   res.render('googlegraph', {...defaultGraphObj, title: 'Quarantine Orders Issued Summary Chart - COVID-19 Dashboard (SG)', gt: 'Quarantine Orders Issued Summary',
@@ -152,6 +158,25 @@ router.get('/data/confirmeddischarged', async function (req, res) {
     output.forEach((d) => {
       let date = new Date(d.Date);
       rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ConfirmedCases_Day)}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
+    });
+    gDataShell.rows = rows;
+    res.json(gDataShell);
+  } catch (e) {
+    res.status(404);
+    res.json({error: e});
+    res.end();
+  }
+});
+
+router.get('/data/casetypes', async function (req, res) {
+  try {
+    let output = await db.query(`SELECT Day, Date, ImportedCase_Day, TotalLocalCase_Day FROM ${dbConfig.infoTable}`);
+    let gDataShell = {};
+    gDataShell.cols = [{label: "Time", type: "string"}, { id: "impC", label: "Imported Cases", type: "number" }, { id: "locC", label: "Local Cases", type: "number" }];
+    let rows = [];
+    output.forEach((d) => {
+      let date = new Date(d.Date);
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.ImportedCase_Day)}, {v: parseInt(d.TotalLocalCase_Day)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
