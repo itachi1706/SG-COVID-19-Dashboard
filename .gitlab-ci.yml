@@ -218,33 +218,33 @@ Build Docker:
 Build ARMv6 Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-armv6
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-armv6
     PLATFORMS: linux/arm/v6
   timeout: 3h
 
 Build ARMv7a Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-armv7a
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-armv7a
     PLATFORMS: linux/arm/v7
   timeout: 3h
 
 Build ARM64 Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-arm64
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-arm64
     PLATFORMS: linux/arm64
 
 Build x86 Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-x86
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-x86
     PLATFORMS: linux/386
 
 Build x86_64 Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG-x64
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-x64
     PLATFORMS: linux/amd64
 
 Docker Merge Manifest Tagged:
@@ -259,7 +259,7 @@ Docker Merge Manifest Tagged:
     - Build x86 Docker Image Tagged
     - Build x86_64 Docker Image Tagged
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/Releases:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG
   script:
     - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG-x64 $IMAGE_TAG-x86 $IMAGE_TAG-arm64 $IMAGE_TAG-armv7a $IMAGE_TAG-armv6
     - docker buildx imagetools inspect $IMAGE_TAG

@@ -1,6 +1,6 @@
 {
   "name": "sg-covid-19-dashboard",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A dashboard for analyzing and displaying information about COVID-19 in Singapore",
   "homepage": "https://gitlab.com/itachi1706/sg-covid-19-dashboard",
   "keywords": [
