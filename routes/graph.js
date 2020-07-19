@@ -43,6 +43,12 @@ router.get('/discharged', async function (req, res) {
     datasource: 'discharged', type: "Bar", co: JSON.stringify(chartOptions)});
 });
 
+router.get('/dailyunlinked', async function (req, res) {
+  let chartOptions = {chart: {title: 'Unlinked Cases', subtitle: 'Daily total unlinked cases reported'}, series: {0: {color: "#FF0000"}}};
+  res.render('googlegraph', {...defaultGraphObj, title: 'Unlinked Case Chart - COVID-19 Dashboard (SG)', gt: 'Unlinked Cases Chart',
+    datasource: 'dailyunlinked', type: "Line", co: JSON.stringify(chartOptions)});
+});
+
 router.get('/confirmeddischarged', async function (req, res) {
   let chartOptions = {chart: {title: 'Confirmed and Discharged Cases', subtitle: 'Daily confirmed and discharged cases in SG'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}}};
   res.render('googlegraph', {...defaultGraphObj, title: 'Confirmed & Discharged Cases Chart - COVID-19 Dashboard (SG)', gt: 'Confirmed & Discharged Cases',
@@ -133,6 +139,25 @@ router.get('/data/discharged', async function (req, res) {
     output.forEach((d) => {
       let date = new Date(d.Date);
       rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.Recovered_Day) + parseInt(d.Deaths_Day)}]});
+    });
+    gDataShell.rows = rows;
+    res.json(gDataShell);
+  } catch (e) {
+    res.status(404);
+    res.json({error: e});
+    res.end();
+  }
+});
+
+router.get('/data/dailyunlinked', async function (req, res) {
+  try {
+    let output = await db.query(`SELECT Day, Date, LocalUnlinked FROM ${dbConfig.infoTable}`);
+    let gDataShell = {};
+    gDataShell.cols = [{label: "Time", type: "string"}, { id: "uc", label: "Unlinked Cases", type: "number" }];
+    let rows = [];
+    output.forEach((d) => {
+      let date = new Date(d.Date);
+      rows.push({c:[{v:date.toDateString()}, {v: parseInt(d.LocalUnlinked)}]});
     });
     gDataShell.rows = rows;
     res.json(gDataShell);
