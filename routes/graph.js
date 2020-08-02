@@ -5,8 +5,10 @@ const frontend = require('../api/firebase-frontend');
 const auth = require('../api/firebase-auth');
 const db = require('../api/db');
 const {dbConfig} = require('../config');
+const util = require('../util');
 
-const defaultGraphObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false, route: 'graphs' };
+const defaultGraphObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false, route: 'graphs', appcommitsha: util.getCommitRev(),
+  appver: util.getVersion(), appenv: util.getEnv() };
 
 async function checkGraphAuth(req, res, next) {
   let token = await auth.checkAuth(req, res, next);

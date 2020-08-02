@@ -14,3 +14,18 @@ module.exports.toISOLocal = function(d) {
         zz(d.getMilliseconds()) +
         sign + z(off/60|0) + ':' + z(off%60);
 }
+
+// This will only be used in development
+module.exports.getCommitRev = function () {
+    let env = process.env.NODE_ENV || "development";
+    if (env === "development") return " (" + require('child_process').execSync('git rev-parse --short HEAD').toString().trim() + ")";
+    else return "";
+}
+
+module.exports.getEnv = function () {
+    return process.env.NODE_ENV || "development";
+}
+
+module.exports.getVersion = function () {
+    return require('./package.json').version;
+}
