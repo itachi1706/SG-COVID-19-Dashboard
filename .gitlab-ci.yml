@@ -20,6 +20,8 @@ include:
 sast:
   rules:
     - when: on_success
+  variables:
+    SAST_EXCLUDED_PATHS: node_modules
   needs: []
 
 license_scanning:
