@@ -7,8 +7,9 @@ const db = require('../api/db');
 const dbUtil = require('../api/db-util');
 const {dbConfig} = require('../config');
 const moment = require('moment');
+const util = require('../util');
 
-const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
+const defaultObj = { fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false, appcommitsha: util.getCommitRev(), appver: util.getVersion(), appenv: util.getEnv() };
 
 async function checkAuth(req, res, next) {
   let token = await auth.checkAuth(req, res, next);

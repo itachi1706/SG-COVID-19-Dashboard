@@ -15,7 +15,8 @@ const moment = require('moment');
 const infoModel = require('../model/info');
 const recalcModel = require('../model/recalculateDelta');
 
-const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false };
+const defaultAdmObject = { route: 'admin', fbConfig: frontend.getFirebaseConfig(), username: "Unknown", loggedIn: false, appcommitsha: utilFunc.getCommitRev(), appver: utilFunc.getVersion(),
+    appenv: utilFunc.getEnv() };
 
 // Check Authentication. Unauthenticated users get kicked to login page
 async function checkAuth(req, res, next) {
