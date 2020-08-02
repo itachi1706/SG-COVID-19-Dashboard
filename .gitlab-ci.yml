@@ -93,6 +93,10 @@ Install Node Dependencies:
   image: node:alpine
   stage: build
   script: npm i
+  artifacts:
+    paths:
+      - node_modules
+    expire_in: 1h
 
 # Build docker containers
 .install_buildx: &installbuildx
