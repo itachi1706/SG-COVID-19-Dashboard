@@ -33,7 +33,7 @@ block content
                     input.form-control#LUnlink(type='number', name='LocalUnlinked', readonly=true, value= data.LocalUnlinked)
             .form-inline
                 .form-group
-                    label(for="HosTotOA").bmd-label-floating= model.Hospital_OtherAreas
+                    label(for="HosTotOA").bmd-label-floating= "Hospitalized + Community"
                     input.form-control#HosTotOA(type='number', name='Hospital_OtherAreas', readonly=true, value= data.Hospital_OtherAreas)
                 .form-group.ml-lg-3
                     label(for="HosTotal").bmd-label-floating= model.HospitalizedTotal
@@ -128,7 +128,7 @@ block content
                     label(for="dLUnlink").bmd-label-floating= model.LocalUnlinked
                     input.form-control#dLUnlink(type='number', name='dLocalUnlinked', readonly=true)
                 .form-group.ml-lg-3
-                    label(for="dHosOA").bmd-label-floating= model.Hospital_OtherAreas
+                    label(for="dHosOA").bmd-label-floating= "Hospitalized + Community"
                     input.form-control#dHosOA(type='number', name='dHospital_OtherAreas', readonly=true)
                 .form-group.ml-lg-3
                     label(for="dHT").bmd-label-floating= model.HospitalizedTotal

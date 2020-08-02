@@ -16,7 +16,7 @@ block content
                                 label(for="Date").bmd-label-floating= model.Date
                                 input.form-control#Date(type='datetime-local', name='Date', value= defaultDate, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
-                                label(for="CCDay").bmd-label-floating= model.ConfirmedCases_Day
+                                label(for="CCDay").bmd-label-floating Confirmed (Day)
                                 input.form-control#CCDay(type='number', name='ConfirmedCases_Day', required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="ICDay").bmd-label-floating= model.ImportedCase_Day
@@ -39,7 +39,7 @@ block content
                                 input.form-control#DeathsDay(type='number', name='Deaths_Day', required=true, onblur="updateCalc()")
                         .form-inline
                             .form-group
-                                label(for="DQOI").bmd-label-floating Quarantined Orders Issued
+                                label(for="DQOI").bmd-label-floating QU Orders Issued
                                 input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3.w-50
                                 label(for="DORSCON").bmd-label-floating= model.DORSCON
@@ -51,7 +51,7 @@ block content
                         h5.mt-3 Active Quarantine Orders Issued
                         .form-inline
                             .form-group
-                                label(for="QUOGD").bmd-label-floating Pending Order Extension
+                                label(for="QUOGD").bmd-label-floating Pend. QUO Extension
                                 input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="QUOPending").bmd-label-floating Pending
@@ -65,10 +65,10 @@ block content
                                 label(for="QUONonGD").bmd-label-floating Non Gazetted Dorms
                                 input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
-                                label(for="QUOGovtQF").bmd-label-floating Govt Quarantine Facilities
+                                label(for="QUOGovtQF").bmd-label-floating GQF
                                 input.form-control#QUOGovtQF(type='number', name='QUO_GovtQuarantinedFacilities', required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
-                                label(for="QUOHQO").bmd-label-floating Home Quarantine Orders
+                                label(for="QUOHQO").bmd-label-floating HQO
                                 input.form-control#QUOHQO(type='number', name='QUO_HomeQuarantinedOrder', required=true, onblur="updateCalc()")
                         .form-group.w-75
                             label(for="Remarks").bmd-label-floating= model.Remarks
@@ -88,7 +88,7 @@ block content
                                 input.form-control#LLink(type='number', name='LocalLinked', readonly=true, value="0")
                         .form-inline
                             .form-group
-                                label(for="HosTotOA").bmd-label-floating= model.Hospital_OtherAreas
+                                label(for="HosTotOA").bmd-label-floating Hospitalized + Community
                                 input.form-control#HosTotOA(type='number', name='Hospital_OtherAreas', readonly=true, value="0")
                             .form-group.ml-xl-3
                                 label(for="HosTotal").bmd-label-floating= model.HospitalizedTotal
