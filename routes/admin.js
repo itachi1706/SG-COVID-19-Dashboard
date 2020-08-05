@@ -145,6 +145,13 @@ router.get('/updateDelta', async (req, res) => {
     res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day, title: 'Recalculate Deltas - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
+router.get('/editDay', async (req, res) => {
+    let result = await db.query(`SELECT Day FROM ${dbConfig.infoTable} ORDER BY Day DESC LIMIT 1`);
+    let data = '';
+    if (req.query.updateVal) data = `Updated Day ${req.query.updateVal} in the database`;
+    res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day, editMode: true, updated: data, title: 'Edit Day - Admin Panel - COVID-19 Dashboard (SG)'});
+});
+
 router.post('/updateDelta/:fromDay', async (req, res) => {
     console.log(`Recalculating from Day ${req.params.fromDay} to Day ${req.body.end}`);
     let identifier = uuidv4();
