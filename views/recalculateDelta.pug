@@ -13,12 +13,13 @@ block content
 
     unless editMode
         - var url = '/admin/updateDelta'
+        - var met = 'post'
     else
         - var url = '/admin/editDay'
+        - var met = 'get'
         p.text-success= updated
 
-    form#test.mt-5(action=`${url}/1` method='post')
-        input(type='hidden', name='end', value=`${latestDay}`)
+    form#test.mt-5(action=`${url}/1` method=`${met}`)
         .form-group
             if editMode
                 label(for='range') Slide to select day to edit
@@ -31,6 +32,7 @@ block content
             .form-group.text-center
                 button.btn.btn-primary.btn-raised.btn-success(type="submit") Edit Day
         else
+            input(type='hidden', name='end', value=`${latestDay}`)
             p.text-muted= 'Starting Calculation from Day: '
                 span#daySel 1
             .form-group.text-center

@@ -152,6 +152,12 @@ router.get('/editDay', async (req, res) => {
     res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day, editMode: true, updated: data, title: 'Edit Day - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
+router.get('/editDay/:day', async (req, res) => {
+    let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${req.params.day}`);
+    console.log(result);
+    res.render('editstats', {...defaultAdmObject});
+});
+
 router.post('/updateDelta/:fromDay', async (req, res) => {
     console.log(`Recalculating from Day ${req.params.fromDay} to Day ${req.body.end}`);
     let identifier = uuidv4();
