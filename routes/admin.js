@@ -180,7 +180,7 @@ router.post('/editDay/:day', async (req, res) => {
         if (Number.isInteger(modified[i]))
             updateClause += `${i}=${modified[i]}, `;
         else
-            updateClause += `${i}='${modified[i]}', `;
+            updateClause += `${i}=${db.escape(modified[i])}, `;
     }
     updateClause = updateClause.trimEnd().replace(/,\s*$/, "");
     let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
