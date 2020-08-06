@@ -125,15 +125,18 @@ block content
                             .form-group.ml-xl-3
                                 label(for="ComQuarantined").bmd-label-floating= model.CompletedQuarantine
                                 input.form-control#ComQuarantined(type='number', name='CompletedQuarantine', readonly=true, value="0")
+
+            input#changesVal(type='hidden', name='modified')
         .form-group
             button.btn.btn-primary.btn-raised(type="submit") Update Statistics
 
 
     h4.mt-5 Updated fields
-    div.text-warning TODO
+    div.text-info#changes
 
     script.
         const prevData = !{prevDataRaw};
+        const oldData = !{dataRaw};
         function updateCalc() {
             // Calculated Statistics
             let tlcDay = $('#TLCDay'), ccDay = $('#CCDay'), icDay = $('#ICDay'), cumL = $('#CumL'), cumC = $('#CumC');
@@ -155,5 +158,21 @@ block content
             $('#CumI').val(prevData.CumulativeImported + +icDay.val());
             $('#CumR').val(prevData.CumulativeRecovered + +recDay.val());
             $('#ComQuarantined').val(tcc.val() - quarantined.val());
+            checkAndComp();
+        }
+        function checkAndComp() {
+            let changes = {};
+            $('input').each(function (d,i) {
+                let name = $(i).attr('name');
+                let newValue = $(i).val();
+                let oldValue = oldData[name];
+                if (Number.isInteger(oldValue)) newValue = parseInt(newValue);
+                if (name === "Date") oldValue = oldData.jsdate;
+                if (name === "modified") return ;
+                //console.log(`${name}: ${newValue} (${oldValue})`);
+                if (newValue !== oldValue) changes[name] = newValue;
+            });
+            $('#changes').text(JSON.stringify(changes));
+            $('#changesVal').val(JSON.stringify(changes));
         }
         $(document).ready(function () {updateCalc();})
