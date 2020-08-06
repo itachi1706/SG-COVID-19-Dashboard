@@ -14,6 +14,8 @@ block content
     script.
         function poll(uuid) {
             let status = $('#status');
+            let fromEdit = #{fromEdit};
+            let day = #{editDay};
             $.ajax({
                 url: `/admin/updateDelta/${uuid}`,
                 dataType: 'json',
@@ -23,7 +25,7 @@ block content
                     if (data.timestampEnd == null) poll(data.uuid);
                     else {
                         status.text(data.state + " (Redirecting in 5 seconds...)");
-                        setTimeout(function () {window.location.href = '/admin/updateDelta'}, 5000);
+                        setTimeout(function () {window.location.href = (fromEdit) ? `/admin/editDay?updateVal=${day}` : '/admin/updateDelta'}, 5000);
                     }
                 }
             });

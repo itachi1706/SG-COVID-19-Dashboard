@@ -145,13 +145,68 @@ router.get('/updateDelta', async (req, res) => {
     res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day, title: 'Recalculate Deltas - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
+router.get('/editDay', async (req, res) => {
+    let result = await db.query(`SELECT Day FROM ${dbConfig.infoTable} ORDER BY Day DESC LIMIT 1`);
+    let data = '';
+    if (req.query.updateVal) data = `Updated Day ${req.query.updateVal} in the database`;
+    res.render('recalculateDelta', {...defaultAdmObject, latestDay: result[0].Day, editMode: true, updated: data, title: 'Edit Day - Admin Panel - COVID-19 Dashboard (SG)'});
+});
+
+router.get('/editDay/:day', async (req, res) => {
+    if (parseInt(req.params.day) === 0) { console.log("Cannot edit 0, redirecting to day 1"); res.redirect('/admin/editDay/1'); return; }
+    let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${parseInt(req.params.day)} LIMIT 1`);
+    result = result[0];
+    let prev = parseInt(req.params.day) - 1;
+    if (prev <= 0) prev = 0;
+    let prevday = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${prev} LIMIT 1`);
+    if (typeof result === 'undefined') { res.redirect(404, '/admin/editDay'); return; }
+    result.jsdate = moment(result.Date).format('YYYY-MM-DDTHH:mm');
+    console.log(result);
+    res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0])});
+});
+
+router.post('/editDay/:day', async (req, res) => {
+   let modified = JSON.parse(req.body.modified);
+   let day = req.params.day;
+   let updateDelta = (parseInt(req.body.torecalculate) !== 0);
+   console.log(`Recalculate Data After update: ${updateDelta}`)
+   console.log(day);
+   console.log(modified);
+   // Convert JSON to SQL UPDATE clause
+    let updateClause = '';
+    for (let i in modified) {
+        if (!modified.hasOwnProperty(i)) continue;
+        //console.log(`${i}: ${modified[i]}`);
+        if (Number.isInteger(modified[i]))
+            updateClause += `${i}=${modified[i]}, `;
+        else
+            updateClause += `${i}=${db.escape(modified[i])}, `;
+    }
+    updateClause = updateClause.trimEnd().replace(/,\s*$/, "");
+    let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
+    console.log(updateSQL);
+    try {
+        if (updateClause !== "") {
+            let updateRes = await db.query(updateSQL);
+            console.log(`Updated ${updateRes.changedRows} rows in the database`);
+        }
+        if (!updateDelta) res.redirect(`/admin/editDay?updateVal=${day}`);
+        else res.redirect(307, `/admin/updateDelta/${day}?edit=1`); // Temp redirect to update deltas
+    } catch (err) {
+        console.log("ERROR");
+        console.log(err);
+        res.redirect(`/admin/editDay`);
+    }
+});
+
 router.post('/updateDelta/:fromDay', async (req, res) => {
     console.log(`Recalculating from Day ${req.params.fromDay} to Day ${req.body.end}`);
     let identifier = uuidv4();
     console.log(`Associating with ${identifier}`);
     let data = new recalcModel(identifier, req.params.fromDay, req.body.end);
+    let isFromEdit = (req.query.edit === "1");
     updateStatus[identifier] = data;
-    res.render('recalculateProgress', {...defaultAdmObject, uuid: data.uuid, state: data.state, title: 'Recalculating In Progress - Admin Panel - COVID-19 Dashboard (SG)'});
+    res.render('recalculateProgress', {...defaultAdmObject, uuid: data.uuid, state: data.state, fromEdit: isFromEdit, editDay: req.params.fromDay, title: 'Recalculating In Progress - Admin Panel - COVID-19 Dashboard (SG)'});
     setTimeout(function () {recalc(identifier);}, 2000);
 });
 

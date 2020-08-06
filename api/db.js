@@ -10,6 +10,8 @@ const pool = mysql.createPool({
     database: dbConfig.database
 });
 
+pool.escape = (val) => { return mysql.escape(val); };
+
 pool.getConnection((err, connection) => {
     if (err) {
         if (err.code === 'PROTOCOL_CONNECTION_LOST') console.error('Database connection was closed.');
