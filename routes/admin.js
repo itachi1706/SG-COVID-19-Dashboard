@@ -153,6 +153,7 @@ router.get('/editDay', async (req, res) => {
 });
 
 router.get('/editDay/:day', async (req, res) => {
+    if (parseInt(req.params.day) === 0) { console.log("Cannot edit 0, redirecting to day 1"); res.redirect('/admin/editDay/1'); return; }
     let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${req.params.day} LIMIT 1`);
     result = result[0];
     let prev = parseInt(req.params.day) - 1;
