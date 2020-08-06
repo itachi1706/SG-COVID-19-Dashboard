@@ -168,6 +168,8 @@ router.get('/editDay/:day', async (req, res) => {
 router.post('/editDay/:day', async (req, res) => {
    let modified = JSON.parse(req.body.modified);
    let day = req.params.day;
+   let updateDelta = (parseInt(req.body.torecalculate) !== 0);
+   console.log(`Recalculate Data After update: ${updateDelta}`)
    console.log(day);
    console.log(modified);
    // Convert JSON to SQL UPDATE clause
@@ -184,9 +186,12 @@ router.post('/editDay/:day', async (req, res) => {
     let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
     console.log(updateSQL);
     try {
-        let updateRes = await db.query(updateSQL);
-        console.log(`Updated ${updateRes.changedRows} rows in the database`);
-        res.redirect(`/admin/editDay?updateVal=${day}`);
+        if (updateClause !== "") {
+            let updateRes = await db.query(updateSQL);
+            console.log(`Updated ${updateRes.changedRows} rows in the database`);
+        }
+        if (!updateDelta) res.redirect(`/admin/editDay?updateVal=${day}`);
+        else res.redirect(307, `/admin/updateDelta/${day}?edit=1`); // Temp redirect to update deltas
     } catch (err) {
         console.log("ERROR");
         console.log(err);
@@ -199,8 +204,9 @@ router.post('/updateDelta/:fromDay', async (req, res) => {
     let identifier = uuidv4();
     console.log(`Associating with ${identifier}`);
     let data = new recalcModel(identifier, req.params.fromDay, req.body.end);
+    let isFromEdit = (req.query.edit === "1");
     updateStatus[identifier] = data;
-    res.render('recalculateProgress', {...defaultAdmObject, uuid: data.uuid, state: data.state, title: 'Recalculating In Progress - Admin Panel - COVID-19 Dashboard (SG)'});
+    res.render('recalculateProgress', {...defaultAdmObject, uuid: data.uuid, state: data.state, fromEdit: isFromEdit, editDay: req.params.fromDay, title: 'Recalculating In Progress - Admin Panel - COVID-19 Dashboard (SG)'});
     setTimeout(function () {recalc(identifier);}, 2000);
 });
 

@@ -126,7 +126,10 @@ block content
                                 label(for="ComQuarantined").bmd-label-floating= model.CompletedQuarantine
                                 input.form-control#ComQuarantined(type='number', name='CompletedQuarantine', readonly=true, value="0")
 
-            input#changesVal(type='hidden', name='modified')
+        input#changesVal(type='hidden', name='modified')
+        input#recalcD(type='hidden', name='torecalculate', value='0')
+        input#recalcDeltas(type='checkbox', onclick='toggleCheckbox()', name='boi')
+        label(for="recalcDeltas").ml-1 Recalculate Data after update
         .form-group
             button.btn.btn-primary.btn-raised(type="submit") Update Statistics
 
@@ -168,7 +171,7 @@ block content
                 let oldValue = oldData[name];
                 if (Number.isInteger(oldValue)) newValue = parseInt(newValue);
                 if (name === "Date") oldValue = oldData.jsdate;
-                if (name === "modified") return ;
+                if (name === "modified" || name === "torecalculate" || name === "boi") return;
                 //console.log(`${name}: ${newValue} (${oldValue})`);
                 if (newValue !== oldValue) changes[name] = newValue;
             });
@@ -177,5 +180,6 @@ block content
             $('#changes').text(JSON.stringify(changes, null, ' '));
             $('#changesVal').val(JSON.stringify(changes));
         }
-        function updateSelect() { $(`#DORSCON`).val(oldData.DORSCON); }
-        $(document).ready(function () {updateSelect(); updateCalc();})
+        function toggleCheckbox(){$('#recalcD').val($('#recalcDeltas').is(':checked') ? "1" : "0");}
+        function updateSelect(){$(`#DORSCON`).val(oldData.DORSCON);}
+        $(document).ready(function(){updateSelect(); updateCalc();})
