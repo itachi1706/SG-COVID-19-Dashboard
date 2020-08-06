@@ -4,8 +4,7 @@ block content
     h2 Add Statistics for a Day
     .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
 
-    form(action='/admin/add' method='post')
-        .text-success#addSuccess.text-hide.mt-2= suc
+    form(action=`/admin/editDay/${day}` method='post')
         table.table.mt-3
             tbody
                 tr
@@ -14,33 +13,33 @@ block content
                         .form-inline
                             .form-group
                                 label(for="Date").bmd-label-floating= model.Date
-                                input.form-control#Date(type='datetime-local', name='Date', value= defaultDate, required=true, onblur="updateCalc()")
+                                input.form-control#Date(type='datetime-local', name='Date', value= data.jsdate, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="CCDay").bmd-label-floating Confirmed (Day)
-                                input.form-control#CCDay(type='number', name='ConfirmedCases_Day', required=true, onblur="updateCalc()")
+                                input.form-control#CCDay(type='number', name='ConfirmedCases_Day', value= data.ConfirmedCases_Day, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="ICDay").bmd-label-floating= model.ImportedCase_Day
-                                input.form-control#ICDay(type='number', name='ImportedCase_Day', required=true, onblur="updateCalc()")
+                                input.form-control#ICDay(type='number', name='ImportedCase_Day', value= data.ImportedCase_Day, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="LUnlink").bmd-label-floating= model.LocalUnlinked
-                                input.form-control#LUnlink(type='number', name='LocalUnlinked', required=true, onblur="updateCalc()")
+                                input.form-control#LUnlink(type='number', name='LocalUnlinked', value= data.LocalUnlinked, required=true, onblur="updateCalc()")
                         .form-inline
                             .form-group
                                 label(for="HosICU").bmd-label-floating= model.HospitalizedICU
-                                input.form-control#HosICU(type='number', name='HospitalizedICU', required=true, onblur="updateCalc()")
+                                input.form-control#HosICU(type='number', name='HospitalizedICU', value= data.HospitalizedICU, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="HosOA").bmd-label-floating= model.HospitalizedOtherArea
-                                input.form-control#HosOA(type='number', name='HospitalizedOtherArea', required=true, onblur="updateCalc()")
+                                input.form-control#HosOA(type='number', name='HospitalizedOtherArea', value= data.HospitalizedOtherArea, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="RecDay").bmd-label-floating= model.Recovered_Day
-                                input.form-control#RecDay(type='number', name='Recovered_Day', required=true, onblur="updateCalc()")
+                                input.form-control#RecDay(type='number', name='Recovered_Day', value= data.Recovered_Day, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="DeathsDay").bmd-label-floating= model.Deaths_Day
-                                input.form-control#DeathsDay(type='number', name='Deaths_Day', required=true, onblur="updateCalc()")
+                                input.form-control#DeathsDay(type='number', name='Deaths_Day', value= data.Deaths_Day, required=true, onblur="updateCalc()")
                         .form-inline
                             .form-group
                                 label(for="DQOI").bmd-label-floating QU Orders Issued
-                                input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', required=true, onblur="updateCalc()")
+                                input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', value= data.DailyQuarantineOrdersIssued, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3.w-50
                                 label(for="DORSCON").bmd-label-floating= model.DORSCON
                                 select.form-control#DORSCON.w-50(name='DORSCON')
@@ -52,24 +51,24 @@ block content
                         .form-inline
                             .form-group
                                 label(for="QUOGD").bmd-label-floating Pend. QUO Extension
-                                input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', required=true, onblur="updateCalc()")
+                                input.form-control#QUOGD(type='number', name='QUO_GazettedDorm', value= data.QUO_GazettedDorm, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="QUOPending").bmd-label-floating Pending
-                                input.form-control#QUOPending(type='number', name='QUO_Pending', required=true, onblur="updateCalc()")
+                                input.form-control#QUOPending(type='number', name='QUO_Pending', value= data.QUO_Pending, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="QUOTransHos").bmd-label-floating Transfer Hospital
-                                input.form-control#QUOTransHos(type='number', name='QUO_TransferHospital', required=true, onblur="updateCalc()")
+                                input.form-control#QUOTransHos(type='number', name='QUO_TransferHospital', value= data.QUO_TransferHospital, required=true, onblur="updateCalc()")
 
                         .form-inline
                             .form-group
                                 label(for="QUONonGD").bmd-label-floating Non Gazetted Dorms
-                                input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', required=true, onblur="updateCalc()")
+                                input.form-control#QUONonGD(type='number', name='QUO_NonGazettedDorm', value= data.QUO_NonGazettedDorm, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="QUOGovtQF").bmd-label-floating GQF
-                                input.form-control#QUOGovtQF(type='number', name='QUO_GovtQuarantinedFacilities', required=true, onblur="updateCalc()")
+                                input.form-control#QUOGovtQF(type='number', name='QUO_GovtQuarantinedFacilities', value= data.QUO_GovtQuarantinedFacilities, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3
                                 label(for="QUOHQO").bmd-label-floating HQO
-                                input.form-control#QUOHQO(type='number', name='QUO_HomeQuarantinedOrder', required=true, onblur="updateCalc()")
+                                input.form-control#QUOHQO(type='number', name='QUO_HomeQuarantinedOrder', value= data.QUO_HomeQuarantinedOrder, required=true, onblur="updateCalc()")
                         .form-group.w-75
                             label(for="Remarks").bmd-label-floating= model.Remarks
                             input.form-control#Remarks.w-75(type='text', name='Remarks')
@@ -79,7 +78,7 @@ block content
                         .form-inline
                             .form-group
                                 label(for="Day").bmd-label-floating= model.Day
-                                input.form-control#Day(type='number', name='Day', value= newDay, readonly=true)
+                                input.form-control#Day(type='number', name='Day', value= data.Day, readonly=true)
                             .form-group.ml-xl-3
                                 label(for="TLCDay").bmd-label-floating= model.TotalLocalCase_Day
                                 input.form-control#TLCDay(type='number', name='TotalLocalCase_Day', readonly=true, value="0")
@@ -127,7 +126,7 @@ block content
                                 label(for="ComQuarantined").bmd-label-floating= model.CompletedQuarantine
                                 input.form-control#ComQuarantined(type='number', name='CompletedQuarantine', readonly=true, value="0")
         .form-group
-            button.btn.btn-primary.btn-raised(type="submit") Add Statistics
+            button.btn.btn-primary.btn-raised(type="submit") Update Statistics
 
 
     h4.mt-5 Updated fields
@@ -157,4 +156,4 @@ block content
             $('#CumR').val(prevData.CumulativeRecovered + +recDay.val());
             $('#ComQuarantined').val(tcc.val() - quarantined.val());
         }
-        $(document).ready(function () { let e = $('#addSuccess'); if (e.html().length !== 0) { if (e.html().startsWith('Failed')) e.addClass('text-danger').removeClass('text-success'); e.removeClass('text-hide'); } });
+        $(document).ready(function () {updateCalc();})

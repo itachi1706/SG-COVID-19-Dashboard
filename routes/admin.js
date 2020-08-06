@@ -153,9 +153,15 @@ router.get('/editDay', async (req, res) => {
 });
 
 router.get('/editDay/:day', async (req, res) => {
-    let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${req.params.day}`);
+    let result = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${req.params.day} LIMIT 1`);
+    result = result[0];
+    let prev = parseInt(req.params.day) - 1;
+    if (prev <= 0) prev = 0;
+    let prevday = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day = ${prev} LIMIT 1`);
+    if (typeof result === 'undefined') { res.redirect(404, '/admin/editDay'); return; }
+    result.jsdate = moment(result.Date).format('YYYY-MM-DDTHH:mm');
     console.log(result);
-    res.render('editstats', {...defaultAdmObject});
+    res.render('editstats', {...defaultAdmObject, data: result, day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0])});
 });
 
 router.post('/updateDelta/:fromDay', async (req, res) => {
