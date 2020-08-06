@@ -164,6 +164,27 @@ router.get('/editDay/:day', async (req, res) => {
     res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0])});
 });
 
+router.post('/editDay/:day', async (req, res) => {
+   let modified = JSON.parse(req.body.modified);
+   let day = req.params.day;
+   console.log(day);
+   console.log(modified);
+   // Convert JSON to SQL UPDATE clause
+    let updateClause = '';
+    for (let i in modified) {
+        if (!modified.hasOwnProperty(i)) continue;
+        //console.log(`${i}: ${modified[i]}`);
+        if (Number.isInteger(modified[i]))
+            updateClause += `${i}=${modified[i]}, `;
+        else
+            updateClause += `${i}='${modified[i]}', `;
+    }
+    updateClause = updateClause.trimEnd().replace(/,\s*$/, "");
+    let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
+    console.log(updateSQL);
+    // TODO: Commit SQL to database
+});
+
 router.post('/updateDelta/:fromDay', async (req, res) => {
     console.log(`Recalculating from Day ${req.params.fromDay} to Day ${req.body.end}`);
     let identifier = uuidv4();
