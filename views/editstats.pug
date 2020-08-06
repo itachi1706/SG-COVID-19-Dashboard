@@ -42,7 +42,7 @@ block content
                                 input.form-control#DQOI(type='number', name='DailyQuarantineOrdersIssued', value= data.DailyQuarantineOrdersIssued, required=true, onblur="updateCalc()")
                             .form-group.ml-lg-3.w-50
                                 label(for="DORSCON").bmd-label-floating= model.DORSCON
-                                select.form-control#DORSCON.w-50(name='DORSCON')
+                                select.form-control#DORSCON.w-50(name='DORSCON', onchange="updateCalc()")
                                     option(value="GREEN") Green
                                     option(value="YELLOW") Yellow
                                     option(value="ORANGE") Orange
@@ -172,7 +172,10 @@ block content
                 //console.log(`${name}: ${newValue} (${oldValue})`);
                 if (newValue !== oldValue) changes[name] = newValue;
             });
+            let dors = $('#DORSCON');
+            if (dors.val() !== oldData.DORSCON) changes.DORSCON = dors.val();
             $('#changes').text(JSON.stringify(changes, null, ' '));
             $('#changesVal').val(JSON.stringify(changes));
         }
-        $(document).ready(function () {updateCalc();})
+        function updateSelect() { $(`#DORSCON`).val(oldData.DORSCON); }
+        $(document).ready(function () {updateSelect(); updateCalc();})
