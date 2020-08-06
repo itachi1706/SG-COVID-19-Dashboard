@@ -183,7 +183,15 @@ router.post('/editDay/:day', async (req, res) => {
     updateClause = updateClause.trimEnd().replace(/,\s*$/, "");
     let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
     console.log(updateSQL);
-    // TODO: Commit SQL to database
+    try {
+        let updateRes = await db.query(updateSQL);
+        console.log(`Updated ${updateRes.changedRows} rows in the database`);
+        res.redirect(`/admin/editDay?updateVal=${day}`);
+    } catch (err) {
+        console.log("ERROR");
+        console.log(err);
+        res.redirect(`/admin/editDay`);
+    }
 });
 
 router.post('/updateDelta/:fromDay', async (req, res) => {
