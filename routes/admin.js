@@ -73,6 +73,26 @@ router.post('/add', async (req, res) => {
     res.render('confirmaddstats', {...defaultAdmObject, data: req.body, model: infoModel, prevDataRaw: JSON.stringify(data), title: 'Confirm Day Stats - Admin Panel - COVID-19 Dashboard (SG)'});
 });
 
+async function insertInfo(data) {
+    let date = new Date(data.Date);
+    let mysqlDate = moment(date).format('YYYY-MM-DD HH:mm:ss')
+    console.log(mysqlDate);
+
+    let infoSql = `INSERT INTO ${dbConfig.infoTable} VALUES (?)`; //We can just insert as it should not conflict
+
+    let infoArr = [ data.Day, mysqlDate, data.ConfirmedCases_Day, data.ImportedCase_Day, data.TotalLocalCase_Day, data.LocalLinked, data.LocalUnlinked, data.Hospital_OtherAreas,
+        data.HospitalizedTotal, data.HospitalizedStable, data.HospitalizedICU, data.HospitalizedOtherArea, data.Recovered_Day, data.Deaths_Day, data.CumulativeConfirmed,
+        data.CumulativeImported, data.CumulativeLocal, data.CumulativeRecovered, data.CumulativeDeaths, data.CumulativeDischarged, data.DailyQuarantineOrdersIssued,
+        data.TotalCloseContacts, data.Quarantined, data.CompletedQuarantine, data.DORSCON, data.QUO_Pending, data.QUO_TransferHospital, data.QUO_NonGazettedDorm,
+        data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null) ];
+
+    try {
+        return await db.query(infoSql, [infoArr]);
+    } catch (e) {
+        throw e;
+    }
+}
+
 async function insertDelta(data) {
     let deltaSql = `INSERT INTO ${dbConfig.deltaTable} (Day, ConfirmedCases_Day, ImportedCase_Day, TotalLocalCase_Day, LocalLinked, LocalUnlinked, Hospital_OtherAreas, HospitalizedTotal, 
     HospitalizedStable, HospitalizedICU, HospitalizedOtherArea, Recovered_Day, Deaths_Day, CumulativeConfirmed, CumulativeImported, CumulativeLocal, CumulativeRecovered, CumulativeDeaths, 
@@ -97,19 +117,9 @@ router.post('/add/:day', async (req, res) => {
     console.log("Adding to Database");
     let data = JSON.parse(JSON.stringify(req.body));
     for (let t in data) if (data.hasOwnProperty(t) && !isNaN(data[t])) data[t] = parseInt(data[t]);
-    let date = new Date(data.Date);
-    let mysqlDate = moment(date).format('YYYY-MM-DD HH:mm:ss')
-    console.log(mysqlDate);
-    let infoSql = `INSERT INTO ${dbConfig.infoTable} VALUES (?)`; //We can just insert as it should not conflict
-    // Craft array to insert
-    let infoArr = [ data.Day, mysqlDate, data.ConfirmedCases_Day, data.ImportedCase_Day, data.TotalLocalCase_Day, data.LocalLinked, data.LocalUnlinked, data.Hospital_OtherAreas,
-        data.HospitalizedTotal, data.HospitalizedStable, data.HospitalizedICU, data.HospitalizedOtherArea, data.Recovered_Day, data.Deaths_Day, data.CumulativeConfirmed,
-        data.CumulativeImported, data.CumulativeLocal, data.CumulativeRecovered, data.CumulativeDeaths, data.CumulativeDischarged, data.DailyQuarantineOrdersIssued,
-        data.TotalCloseContacts, data.Quarantined, data.CompletedQuarantine, data.DORSCON, data.QUO_Pending, data.QUO_TransferHospital, data.QUO_NonGazettedDorm,
-        data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null) ];
 
     try {
-        let result = await db.query(infoSql, [infoArr]);
+        let result = await insertInfo(data);
         console.log(`Added ${result.affectedRows} rows into Info Table`);
         let result2 = await insertDelta(data)
         console.log(`Added ${result2.affectedRows} rows into Delta Table with ID ${result2.insertId}`);
@@ -131,9 +141,12 @@ async function recalc(uuid) {
     while (data.currentDay <= data.endDay) {
         console.log(`Processing Day ${data.currentDay}`);
         let dbData = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day >= ${data.currentDay - 1} LIMIT 2`);
+        let info = data.calculateInfo(dbData[0], dbData[1]);
         let delta = data.recalculate(dbData[0], dbData[1]);
         delta.Day = data.currentDay;
         await db.query(`DELETE FROM ${dbConfig.deltaTable} WHERE Day = ${data.currentDay}`);
+        await db.query(`DELETE FROM ${dbConfig.infoTable} WHERE Day = ${data.currentDay}`);
+        await insertInfo(info);
         await insertDelta(delta);
         data.step();
     }

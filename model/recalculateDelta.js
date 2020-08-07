@@ -1,5 +1,14 @@
+/**
+ * Recalculates deltas and calculated values helper model
+ */
 class RecalculateDelta {
 
+    /**
+     * Create a new instance for recalculating deltas and calculated values
+     * @param uuid UUID to associate this instance with
+     * @param start Day to start from
+     * @param end Day to stop at
+     */
     constructor(uuid, start, end) {
         this.uuid = uuid;
         this.timestampStart = Date.now();
@@ -10,16 +19,33 @@ class RecalculateDelta {
         this.endDay = end;
     }
 
+    /**
+     * Start processing
+     */
     start() { this.state = "PROCESSING - Day " + this.currentDay; }
+
+    /**
+     * Switch to the next day
+     */
     step() {
         this.currentDay++;
         this.state = "PROCESSING - Day " + this.currentDay;
     }
+
+    /**
+     * Mark task as complete
+     */
     complete() {
         this.state = "COMPLETE";
         this.timestampEnd = Date.now();
     }
-    
+
+    /**
+     * Recalculate Delta Values
+     * @param prevData Previous day info record
+     * @param curData Current day info record
+     * @returns {{}} Recalculated delta values
+     */
     recalculate(prevData, curData) {
         // Match confirmaddstats.pug
         let delta = {}
@@ -52,6 +78,32 @@ class RecalculateDelta {
         delta.dQUO_GovtQuarantinedFacilities = curData.QUO_GovtQuarantinedFacilities - prevData.QUO_GovtQuarantinedFacilities;
         delta.dQUO_HomeQuarantinedOrder = curData.QUO_HomeQuarantinedOrder - prevData.QUO_HomeQuarantinedOrder;
         return delta;
+    }
+
+    /**
+     * Recalculate calculated info statistics
+     * @param prevDay Previous day Info Record
+     * @param data Current day Info record
+     * @returns {*} Updated info record with calculated statistics updated
+     */
+    calculateInfo(prevDay, data) {
+        data.TotalLocalCase_Day = data.ConfirmedCases_Day + data.ImportedCase_Day;
+        data.CumulativeLocal = prevDay.CumulativeLocal + data.TotalLocalCase_Day;
+        data.CumulativeDischarged = prevDay.CumulativeDischarged + data.Recovered_Day + data.Deaths_Day;
+        data.CumulativeDeaths = prevDay.CumulativeDeaths + data.Deaths_Day;
+        data.CumulativeConfirmed = prevDay.CumulativeConfirmed + data.ConfirmedCases_Day;
+        data.HospitalizedTotal = data.CumulativeConfirmed - data.CumulativeDischarged - data.CumulativeDeaths - data.HospitalizedOtherArea;
+        data.TotalCloseContacts = prevDay.TotalCloseContacts + data.DailyQuarantineOrdersIssued;
+        data.Quarantined = data.QUO_Pending + data.QUO_TransferHospital + data.QUO_NonGazettedDorm + data.QUO_GazettedDorm + data.QUO_GovtQuarantinedFacilities + data.QUO_HomeQuarantinedOrder;
+
+        data.LocalLinked = data.CumulativeLocal - data.LocalUnlinked;
+        data.Hospital_OtherAreas = data.HospitalizedTotal + data.HospitalizedOtherArea;
+        data.HospitalizedStable = data.HospitalizedTotal - data.HospitalizedICU;
+        data.CumulativeImported = prevDay.CumulativeImported + data.ImportedCase_Day;
+        data.CumulativeRecovered = prevDay.CumulativeRecovered + data.Recovered_Day;
+        data.CompletedQuarantine = data.TotalCloseContacts - data.Quarantined;
+
+        return data;
     }
 }
 
