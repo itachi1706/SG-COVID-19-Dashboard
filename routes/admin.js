@@ -142,7 +142,6 @@ async function recalc(uuid) {
         console.log(`Processing Day ${data.currentDay}`);
         let dbData = await db.query(`SELECT * FROM ${dbConfig.infoTable} WHERE Day >= ${data.currentDay - 1} LIMIT 2`);
         let info = data.calculateInfo(dbData[0], dbData[1]);
-        data.stage();
         let delta = data.recalculate(dbData[0], dbData[1]);
         delta.Day = data.currentDay;
         await db.query(`DELETE FROM ${dbConfig.deltaTable} WHERE Day = ${data.currentDay}`);

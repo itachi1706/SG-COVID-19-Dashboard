@@ -22,19 +22,14 @@ class RecalculateDelta {
     /**
      * Start processing
      */
-    start() { this.state = "PROCESSING INFO - Day " + this.currentDay; }
-
-    /**
-     * Switch to calculating delta values
-     */
-    stage() { this.state = "PROCESSING DELTA - Day " + this.currentDay; }
+    start() { this.state = "PROCESSING - Day " + this.currentDay; }
 
     /**
      * Switch to the next day
      */
     step() {
         this.currentDay++;
-        this.state = "PROCESSING INFO - Day " + this.currentDay;
+        this.state = "PROCESSING - Day " + this.currentDay;
     }
 
     /**
