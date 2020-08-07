@@ -10,10 +10,11 @@ class RecalculateDelta {
         this.endDay = end;
     }
 
-    start() { this.state = "PROCESSING - Day " + this.currentDay; }
+    start() { this.state = "PROCESSING INFO - Day " + this.currentDay; }
+    stage() { this.state = "PROCESSING DELTA - Day " + this.currentDay; }
     step() {
         this.currentDay++;
-        this.state = "PROCESSING - Day " + this.currentDay;
+        this.state = "PROCESSING INFO - Day " + this.currentDay;
     }
     complete() {
         this.state = "COMPLETE";
@@ -52,6 +53,26 @@ class RecalculateDelta {
         delta.dQUO_GovtQuarantinedFacilities = curData.QUO_GovtQuarantinedFacilities - prevData.QUO_GovtQuarantinedFacilities;
         delta.dQUO_HomeQuarantinedOrder = curData.QUO_HomeQuarantinedOrder - prevData.QUO_HomeQuarantinedOrder;
         return delta;
+    }
+
+    calculateInfo(prevDay, data) {
+        data.TotalLocalCase_Day = data.ConfirmedCases_Day + data.ImportedCase_Day;
+        data.CumulativeLocal = prevDay.CumulativeLocal + data.TotalLocalCase_Day;
+        data.CumulativeDischarged = prevDay.CumulativeDischarged + data.Recovered_Day + data.Deaths_Day;
+        data.CumulativeDeaths = prevDay.CumulativeDeaths + data.Deaths_Day;
+        data.CumulativeConfirmed = prevDay.CumulativeConfirmed + data.ConfirmedCases_Day;
+        data.HospitalizedTotal = data.CumulativeConfirmed - data.CumulativeDischarged - data.CumulativeDeaths - data.HospitalizedOtherArea;
+        data.TotalCloseContacts = prevDay.TotalCloseContacts + data.DailyQuarantineOrdersIssued;
+        data.Quarantined = data.QUO_Pending + data.QUO_TransferHospital + data.QUO_NonGazettedDorm + data.QUO_GazettedDorm + data.QUO_GovtQuarantinedFacilities + data.QUO_HomeQuarantinedOrder;
+
+        data.LocalLinked = data.CumulativeLocal - data.LocalUnlinked;
+        data.Hospital_OtherAreas = data.HospitalizedTotal + data.HospitalizedOtherArea;
+        data.HospitalizedStable = data.HospitalizedTotal - data.HospitalizedICU;
+        data.CumulativeImported = prevDay.CumulativeImported + data.ImportedCase_Day;
+        data.CumulativeRecovered = prevDay.CumulativeRecovered + data.Recovered_Day;
+        data.CompletedQuarantine = data.TotalCloseContacts - data.Quarantined;
+
+        return data;
     }
 }
 
