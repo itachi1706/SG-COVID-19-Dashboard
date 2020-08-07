@@ -1,5 +1,14 @@
+/**
+ * Recalculates deltas and calculated values helper model
+ */
 class RecalculateDelta {
 
+    /**
+     * Create a new instance for recalculating deltas and calculated values
+     * @param uuid UUID to associate this instance with
+     * @param start Day to start from
+     * @param end Day to stop at
+     */
     constructor(uuid, start, end) {
         this.uuid = uuid;
         this.timestampStart = Date.now();
@@ -10,17 +19,38 @@ class RecalculateDelta {
         this.endDay = end;
     }
 
+    /**
+     * Start processing
+     */
     start() { this.state = "PROCESSING INFO - Day " + this.currentDay; }
+
+    /**
+     * Switch to calculating delta values
+     */
     stage() { this.state = "PROCESSING DELTA - Day " + this.currentDay; }
+
+    /**
+     * Switch to the next day
+     */
     step() {
         this.currentDay++;
         this.state = "PROCESSING INFO - Day " + this.currentDay;
     }
+
+    /**
+     * Mark task as complete
+     */
     complete() {
         this.state = "COMPLETE";
         this.timestampEnd = Date.now();
     }
-    
+
+    /**
+     * Recalculate Delta Values
+     * @param prevData Previous day info record
+     * @param curData Current day info record
+     * @returns {{}} Recalculated delta values
+     */
     recalculate(prevData, curData) {
         // Match confirmaddstats.pug
         let delta = {}
@@ -55,6 +85,12 @@ class RecalculateDelta {
         return delta;
     }
 
+    /**
+     * Recalculate calculated info statistics
+     * @param prevDay Previous day Info Record
+     * @param data Current day Info record
+     * @returns {*} Updated info record with calculated statistics updated
+     */
     calculateInfo(prevDay, data) {
         data.TotalLocalCase_Day = data.ConfirmedCases_Day + data.ImportedCase_Day;
         data.CumulativeLocal = prevDay.CumulativeLocal + data.TotalLocalCase_Day;
