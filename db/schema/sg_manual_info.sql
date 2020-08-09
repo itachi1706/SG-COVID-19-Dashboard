@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 19, 2020 at 07:13 PM
--- Server version: 5.7.29
--- PHP Version: 7.2.24-0ubuntu0.18.04.4
+-- Generation Time: Aug 09, 2020 at 06:18 PM
+-- Server version: 5.7.30
+-- PHP Version: 7.2.24-0ubuntu0.18.04.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -58,7 +58,8 @@ CREATE TABLE `sg_manual_info` (
   `QUO_GazettedDorm` int(11) NOT NULL DEFAULT '0',
   `QUO_GovtQuarantinedFacilities` int(11) NOT NULL DEFAULT '0',
   `QUO_HomeQuarantinedOrder` int(11) NOT NULL DEFAULT '0',
-  `Remarks` text COLLATE utf8mb4_unicode_ci COMMENT 'Remarks Column for any remarks of the day'
+  `Remarks` text COLLATE utf8mb4_unicode_ci COMMENT 'Remarks Column for any remarks of the day',
+  `SitRepLink` text COLLATE utf8mb4_unicode_ci COMMENT 'URL Link to the Situation Report PDF'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
