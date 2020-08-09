@@ -74,6 +74,10 @@ block content
                             label(for="Remarks").bmd-label-floating= model.Remarks
                             input.form-control#Remarks.w-75(type='text', name='Remarks')
                             span.bmd-help Only fill this if you have any remarks for this day
+                        .form-group.w-75
+                            label(for="SitRep").bmd-label-floating= model.SitRepLink
+                            input.form-control#SitRep.w-75(type='url', name='SitRep')
+                            span.bmd-help Link to MOH Situation Report if available
                     td
                         h4.mt-5 Calculated Statistics
                         .form-inline
