@@ -22,7 +22,7 @@ module.exports.getCommitRev = function () {
     if (env === "development") return ` (${require('child_process').execSync('git rev-parse --short HEAD').toString().trim()})`;
     else {
         let path = './COMMITSHA';
-        if (fs.existsSync(path)) return ` (${fs.readFileSync(path, 'utf8')})`;
+        if (fs.existsSync(path)) return ` (${fs.readFileSync(path, 'utf8').trimEnd()})`;
         else {
             // Cannot find the file
             console.log("Production and failed to find COMMITSHA in app root folder. Omitting Commit Rev");
