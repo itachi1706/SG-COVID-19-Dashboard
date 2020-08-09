@@ -23,6 +23,7 @@ module.exports.getCommitRev = function () {
     else {
         let path = './COMMITSHA';
         if (fs.existsSync(path)) return ` (${fs.readFileSync(path, 'utf8').trimEnd()})`;
+        else if (process.env.SOURCE_VERSION_SHORT) { console.log(`Found Commit SHA in ENV. Using it`); return ` (${process.env.SOURCE_VERSION_SHORT})`; }
         else {
             // Cannot find the file
             console.log("Production and failed to find COMMITSHA in app root folder. Omitting Commit Rev");
