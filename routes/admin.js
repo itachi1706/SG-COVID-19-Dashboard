@@ -175,7 +175,8 @@ router.get('/editDay/:day', async (req, res) => {
     if (typeof result === 'undefined') { res.redirect(404, '/admin/editDay'); return; }
     result.jsdate = moment(result.Date).format('YYYY-MM-DDTHH:mm');
     console.log(result);
-    res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0])});
+    res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0]),
+        title: `Editing Day ${req.params.day} - Admin Panel - COVID-19 Dashboard (SG)`});
 });
 
 router.post('/editDay/:day', async (req, res) => {

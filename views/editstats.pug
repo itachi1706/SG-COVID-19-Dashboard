@@ -1,7 +1,7 @@
 extends navbar-layout
 
 block content
-    h2 Add Statistics for a Day
+    h2 Editing Day #{day}
     .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
 
     form(action=`/admin/editDay/${day}` method='post')
