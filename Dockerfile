@@ -1,3 +1,4 @@
+# Stage 1 build and install dependencies
 FROM node:alpine as build
 
 # Setup Python in case we need it
@@ -13,11 +14,24 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm i
 
-FROM node:alpine
+# Stage 2 add files and remove unwanted files. Also generate the SHA
+FROM node:alpine as preparse
 
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY . .
+
+RUN apk add --no-cache git
+RUN git rev-parse --short HEAD > COMMITSHA
+
+# Remove git directory
+RUN rm -rf .git && rm -rf .gitignore && rm -rf Dockerfile && rm -rf .gitlab-ci.yml
+
+# Stage 3 copy and prepare final image
+FROM node:alpine
+
+WORKDIR /usr/src/app
+COPY --from=preparse /usr/src/app .
 
 EXPOSE 3000
 

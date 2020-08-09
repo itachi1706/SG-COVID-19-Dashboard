@@ -323,6 +323,7 @@ Deploy to Heroku Prod:
     - apk add git curl
     - gem install dpl
     - echo "Deploying to Heroku"
+    - echo $CI_COMMIT_SHORT_SHA > COMMITSHA
   script: dpl --provider=heroku --app=$MY_APP --api-key=$HEROKU_KEY
   environment:
     name: Production
