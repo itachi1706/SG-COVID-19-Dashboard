@@ -27,26 +27,26 @@ block content
                     {
                         extend: 'colvisGroup',
                         text: 'Daily Cases',
-                        show: [1, 2, 3, 4, 5, 6, 7, 12, 13, 24, 31],
+                        show: [1, 2, 3, 4, 5, 6, 7, 12, 13, 24, 31, 32],
                         hide: [8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30]
                     },
                     {
                         extend: 'colvisGroup',
                         text: 'Hospitalized',
                         show: [1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 18, 19],
-                        hide: [5, 6, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+                        hide: [5, 6, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32]
                     },
                     {
                         extend: 'colvisGroup',
                         text: 'Cumulative',
                         show: [1,14,15,16,17,18,19],
-                        hide: [2,3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24,25,26,27,28,29,30,31]
+                        hide: [2,3,4,5,6,7,8,9,10,11,12,13,20,21,22,23,24,25,26,27,28,29,30,31,32]
                     },
                     {
                         extend: 'colvisGroup',
                         text: 'Quarantine Orders',
                         show: [1, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30],
-                        hide: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 31]
+                        hide: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 31, 32]
                     },
                     'print',
                     'copyHtml5',
@@ -96,6 +96,7 @@ block content
                     { title: "QUO (GQF)", data: "QUO_GovtQuarantinedFacilities" },
                     { title: "QUO (HQO)", data: "QUO_HomeQuarantinedOrder" },
                     { title: "Remarks", data: "Remarks" },
+                    { title: "Situation Report PDF", data: "SitRepLink", render: function (data) {return (data == null) ? '' : `<a target="_blank" href="${data}">${data}</a>`;}}
                 ]
             });
         });
