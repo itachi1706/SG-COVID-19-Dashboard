@@ -84,7 +84,7 @@ async function insertInfo(data) {
         data.HospitalizedTotal, data.HospitalizedStable, data.HospitalizedICU, data.HospitalizedOtherArea, data.Recovered_Day, data.Deaths_Day, data.CumulativeConfirmed,
         data.CumulativeImported, data.CumulativeLocal, data.CumulativeRecovered, data.CumulativeDeaths, data.CumulativeDischarged, data.DailyQuarantineOrdersIssued,
         data.TotalCloseContacts, data.Quarantined, data.CompletedQuarantine, data.DORSCON, data.QUO_Pending, data.QUO_TransferHospital, data.QUO_NonGazettedDorm,
-        data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null) ];
+        data.QUO_GazettedDorm, data.QUO_GovtQuarantinedFacilities, data.QUO_HomeQuarantinedOrder, ((data.Remarks) ? data.Remarks : null), ((data.SitRep) ? data.SitRep : null) ];
 
     try {
         return await db.query(infoSql, [infoArr]);
@@ -175,7 +175,8 @@ router.get('/editDay/:day', async (req, res) => {
     if (typeof result === 'undefined') { res.redirect(404, '/admin/editDay'); return; }
     result.jsdate = moment(result.Date).format('YYYY-MM-DDTHH:mm');
     console.log(result);
-    res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0])});
+    res.render('editstats', {...defaultAdmObject, data: result, dataRaw: JSON.stringify(result), day: req.params.day, model: infoModel, prevDataRaw: JSON.stringify(prevday[0]),
+        title: `Editing Day ${req.params.day} - Admin Panel - COVID-19 Dashboard (SG)`});
 });
 
 router.post('/editDay/:day', async (req, res) => {

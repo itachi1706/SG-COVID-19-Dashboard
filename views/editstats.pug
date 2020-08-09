@@ -1,7 +1,7 @@
 extends navbar-layout
 
 block content
-    h2 Add Statistics for a Day
+    h2 Editing Day #{day}
     .text-warning Note that you should ensure all data from the day is obtained and can fill up all fields before continuing
 
     form(action=`/admin/editDay/${day}` method='post')
@@ -71,8 +71,12 @@ block content
                                 input.form-control#QUOHQO(type='number', name='QUO_HomeQuarantinedOrder', value= data.QUO_HomeQuarantinedOrder, required=true, onblur="updateCalc()")
                         .form-group.w-75
                             label(for="Remarks").bmd-label-floating= model.Remarks
-                            input.form-control#Remarks.w-75(type='text', name='Remarks', onblur="updateCalc()")
+                            input.form-control#Remarks.w-75(type='text', name='Remarks', onblur="updateCalc()", value= data.Remarks)
                             span.bmd-help Only fill this if you have any remarks for this day
+                        .form-group.w-75
+                            label(for="SitRepLink").bmd-label-floating= model.SitRepLink
+                            input.form-control#SitRepLink.w-75(type='url', name='SitRepLink', onblur="updateCalc()", value= data.SitRepLink)
+                            span.bmd-help Link to MOH Situation Report if available
                     td
                         h4.mt-5 Calculated Statistics
                         .form-inline

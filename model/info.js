@@ -30,7 +30,8 @@ const model = {
     'QUO_GazettedDorm': 'QUO - Pending Extension',
     'QUO_GovtQuarantinedFacilities': 'QUO - Government Quarantine Facilities',
     'QUO_HomeQuarantinedOrder': 'QUO - Home Quarantine Orders',
-    'Remarks': 'Remarks'
+    'Remarks': 'Remarks',
+    'SitRepLink': 'Situation Report PDF'
 };
 
 module.exports = model;
