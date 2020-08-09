@@ -64,7 +64,8 @@ router.get('/casetypes', async function (req, res) {
 });
 
 router.get('/quosummary', async function (req, res) {
-  let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"}, 1: {color: "#00FF00"}, 2: {color: "#0000FF"}}};
+  let chartOptions = {chart: {title: 'Quarantine Orders Issued', subtitle: 'Overall view of the total number of Quarantine Orders issued and completed'}, series: {0: {color: "#FF0000"},
+      1: {color: "#00FF00"}, 2: {color: "#0000FF"}}};
   res.render('googlegraph', {...defaultGraphObj, title: 'Quarantine Orders Issued Summary Chart - COVID-19 Dashboard (SG)', gt: 'Quarantine Orders Issued Summary',
     datasource: 'quosummary', type: "Line", co: JSON.stringify(chartOptions)});
 });
@@ -76,7 +77,8 @@ router.get('/quodaily', async function (req, res) {
 });
 
 router.get('/quodetail', async function (req, res) {
-  let chartOptions = {chart: {title: 'Active Quarantine Orders by Categories', subtitle: 'View of current Quarantine Orders and what category they belong to'}, series: {0: {color: "#FF0000"}, 1: {color: "#178C09"}, 2: {color: "#FFDF00"}, 3: {color: "#0000FF"}, 4: {color: "#810AA1"}, 5: {color: "#A10A81"}}};
+  let chartOptions = {chart: {title: 'Active Quarantine Orders by Categories', subtitle: 'View of active Quarantine Orders and their categories'}, series: {0: {color: "#FF0000"}, 1: {color: "#178C09"},
+      2: {color: "#FFDF00"}, 3: {color: "#0000FF"}, 4: {color: "#810AA1"}, 5: {color: "#FF1493"}}};
   res.render('googlegraph', {...defaultGraphObj, title: 'Active Quarantine Orders (Categorized) Chart - COVID-19 Dashboard (SG)', gt: 'Active Quarantine Orders (Categorized) Chart',
     datasource: 'quodetail', type: "Line", co: JSON.stringify(chartOptions)});
 });
