@@ -16,10 +16,19 @@ module.exports.toISOLocal = function(d) {
 }
 
 // This will only be used in development
+const fs = require('fs');
 module.exports.getCommitRev = function () {
-    let env = process.env.NODE_ENV || "development";
-    if (env === "development") return " (" + require('child_process').execSync('git rev-parse --short HEAD').toString().trim() + ")";
-    else return "";
+    let env = exports.getEnv();
+    if (env === "development") return ` (${require('child_process').execSync('git rev-parse --short HEAD').toString().trim()})`;
+    else {
+        let path = './COMMITSHA';
+        if (fs.existsSync(path)) return ` (${fs.readFileSync(path, 'utf8')})`;
+        else {
+            // Cannot find the file
+            console.log("Production and failed to find COMMITSHA in app root folder. Omitting Commit Rev");
+            return "";
+        }
+    }
 }
 
 module.exports.getEnv = function () {
