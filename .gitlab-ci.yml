@@ -16,13 +16,10 @@ include:
   - template: License-Scanning.gitlab-ci.yml
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
-
-sast:
-  rules:
-    - when: on_success
-  variables:
-    SAST_EXCLUDED_PATHS: node_modules
-  needs: []
+  - template: Secret-Detection.gitlab-ci.yml
+  
+variables:
+  SAST_EXCLUDED_PATHS: node_modules
 
 license_scanning:
   rules:
@@ -34,22 +31,17 @@ container_scanning:
     - when: on_success
   needs: ["Container Scan Docker"]
 
-dependency_scanning:
-  dependencies:
-    - Install Node Dependencies
-  rules:
-    - when: on_success
-  needs: ["Install Node Dependencies"]
-
 eslint-sast:
   rules:
     - when: on_success
   needs: []
 
 gemnasium-dependency_scanning:
+  dependencies:
+    - Install Node Dependencies
   rules:
     - when: on_success
-  needs: []
+  needs: ["Install Node Dependencies"]
 
 nodejs-scan-sast:
   rules:
@@ -57,11 +49,13 @@ nodejs-scan-sast:
   needs: []    
 
 retire-js-dependency_scanning:
+  dependencies:
+    - Install Node Dependencies
   rules:
     - when: on_success
-  needs: []
+  needs: ["Install Node Dependencies"]
 
-secrets-sast:
+secret_detection:
   rules:
     - when: on_success
   needs: []
