@@ -16,6 +16,7 @@ include:
   - template: License-Scanning.gitlab-ci.yml
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
+  - template: Secret-Detection.gitlab-ci.yml
 
 sast:
   rules:
@@ -61,7 +62,7 @@ retire-js-dependency_scanning:
     - when: on_success
   needs: []
 
-secrets-sast:
+secret_detection:
   rules:
     - when: on_success
   needs: []
