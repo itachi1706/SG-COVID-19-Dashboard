@@ -31,22 +31,17 @@ container_scanning:
     - when: on_success
   needs: ["Container Scan Docker"]
 
-dependency_scanning:
-  dependencies:
-    - Install Node Dependencies
-  rules:
-    - when: on_success
-  needs: ["Install Node Dependencies"]
-
 eslint-sast:
   rules:
     - when: on_success
   needs: []
 
 gemnasium-dependency_scanning:
+  dependencies:
+    - Install Node Dependencies
   rules:
     - when: on_success
-  needs: []
+  needs: ["Install Node Dependencies"]
 
 nodejs-scan-sast:
   rules:
@@ -54,9 +49,11 @@ nodejs-scan-sast:
   needs: []    
 
 retire-js-dependency_scanning:
+  dependencies:
+    - Install Node Dependencies
   rules:
     - when: on_success
-  needs: []
+  needs: ["Install Node Dependencies"]
 
 secret_detection:
   rules:
