@@ -160,12 +160,6 @@ Build ARM64 Docker Image Master:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:arm64
     PLATFORMS: linux/arm64
 
-Build x86 Docker Image Master:
-  <<: *gendockerimagesmaster
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:x86
-    PLATFORMS: linux/386
-
 Build x86_64 Docker Image Master:
   <<: *gendockerimagesmaster
   variables:
@@ -181,12 +175,11 @@ Docker Merge Manifest Master:
     - Build ARMv6 Docker Image Master
     - Build ARMv7a Docker Image Master
     - Build ARM64 Docker Image Master
-    - Build x86 Docker Image Master
     - Build x86_64 Docker Image Master
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE
   script:
-    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG:x64 $IMAGE_TAG:x86 $IMAGE_TAG:arm64 $IMAGE_TAG:armv7a $IMAGE_TAG:armv6
+    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG:x64 $IMAGE_TAG:arm64 $IMAGE_TAG:armv7a $IMAGE_TAG:armv6
     - docker buildx imagetools inspect $IMAGE_TAG
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -235,12 +228,6 @@ Build ARM64 Docker Image Tagged:
     IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-arm64
     PLATFORMS: linux/arm64
 
-Build x86 Docker Image Tagged:
-  <<: *gendockerimagestags
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG-x86
-    PLATFORMS: linux/386
-
 Build x86_64 Docker Image Tagged:
   <<: *gendockerimagestags
   variables:
@@ -256,12 +243,11 @@ Docker Merge Manifest Tagged:
     - Build ARMv6 Docker Image Tagged
     - Build ARMv7a Docker Image Tagged
     - Build ARM64 Docker Image Tagged
-    - Build x86 Docker Image Tagged
     - Build x86_64 Docker Image Tagged
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE/releases:$CI_COMMIT_REF_SLUG
   script:
-    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG-x64 $IMAGE_TAG-x86 $IMAGE_TAG-arm64 $IMAGE_TAG-armv7a $IMAGE_TAG-armv6
+    - docker buildx imagetools create -t $IMAGE_TAG $IMAGE_TAG-x64 $IMAGE_TAG-arm64 $IMAGE_TAG-armv7a $IMAGE_TAG-armv6
     - docker buildx imagetools inspect $IMAGE_TAG
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
