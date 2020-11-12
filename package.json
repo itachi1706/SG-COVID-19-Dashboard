@@ -48,7 +48,7 @@
     "express": "~4.16.1",
     "express-sslify": "^1.2.0",
     "firebase": "^7.17.1",
-    "firebase-admin": "^8.13.0",
+    "firebase-admin": "^9.0.0",
     "firebase-auth": "^0.1.2",
     "google-charts": "^2.0.0",
     "helmet": "^3.23.3",
