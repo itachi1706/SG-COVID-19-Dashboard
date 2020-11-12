@@ -17,13 +17,9 @@ include:
   - template: Container-Scanning.gitlab-ci.yml
   - template: Dependency-Scanning.gitlab-ci.yml
   - template: Secret-Detection.gitlab-ci.yml
-
-sast:
-  rules:
-    - when: on_success
-  variables:
-    SAST_EXCLUDED_PATHS: node_modules
-  needs: []
+  
+variables:
+  SAST_EXCLUDED_PATHS: node_modules
 
 license_scanning:
   rules:
