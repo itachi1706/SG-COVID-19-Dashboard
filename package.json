@@ -8,10 +8,7 @@
     "sg",
     "dashboard"
   ],
-  "author": {
-    "name": "Kenneth Soh kenneth@itachi1706.com",
-    "email": "kenneth@itachi1706.com"
-  },  
+  "author": "Kenneth Soh <kenneth@itachi1706.com>",
   "contributors": [],
   "repository": {
     "type": "git",
