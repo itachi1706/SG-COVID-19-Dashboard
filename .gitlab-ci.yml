@@ -88,6 +88,8 @@ Install BuildX:
 Install Node Dependencies:
   image: node:alpine
   stage: build
+  before_script:
+    - apk add --no-cache python3 py3-pip
   script: npm i
   artifacts:
     paths:
