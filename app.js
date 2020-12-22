@@ -35,7 +35,7 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'kit.fontawesome.com', 'kit-pro.fontawesome.com', 'code.jquery.com', 'www.gstatic.com',
       'unpkg.com', 'cdn.datatables.net', 'cdnjs.cloudflare.com', 'www.google-analytics.com', 'static.cloudflareinsights.com'],
     fontSrc: ["'self'", 'fonts.gstatic.com'],
-    connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com', 'securetoken.googleapis.com']
+    connectSrc: ["'self'", 'www.googleapis.com', 'kit-pro.fontawesome.com', 'securetoken.googleapis.com', 'ka-p.fontawesome.com']
   }
 }));
 app.use(helmet.referrerPolicy({policy: 'same-origin'}));
