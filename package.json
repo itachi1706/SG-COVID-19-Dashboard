@@ -51,7 +51,7 @@
     "firebase-admin": "^9.6.0",
     "firebase-auth": "^0.1.2",
     "google-charts": "^2.0.0",
-    "helmet": "^4.4.1",
+    "helmet": "^4.5.0",
     "http-errors": "~1.8.0",
     "jquery": "^3.6.0",
     "json-2-csv": "^3.10.3",
