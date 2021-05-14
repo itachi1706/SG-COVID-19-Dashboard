@@ -86,7 +86,7 @@ Install BuildX:
 
 # Node.JS Testing
 Install Node Dependencies:
-  image: node:alpine
+  image: node:15-alpine3.13
   stage: build
   variables:
     PYTHONUNBUFFERED: 1
