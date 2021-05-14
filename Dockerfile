@@ -1,5 +1,5 @@
 # Stage 1 build and install dependencies
-FROM node:alpine as build
+FROM node:15-alpine3.13 as build
 
 # Setup Python in case we need it
 # This hack is widely applied to avoid python printing issues in docker containers.
@@ -15,7 +15,7 @@ COPY package*.json ./
 RUN npm i
 
 # Stage 2 add files and remove unwanted files. Also generate the SHA
-FROM node:alpine as preparse
+FROM node:15-alpine3.13 as preparse
 
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/node_modules ./node_modules
@@ -28,7 +28,7 @@ RUN git rev-parse --short HEAD > COMMITSHA
 RUN rm -rf .git && rm -rf .gitignore && rm -rf Dockerfile && rm -rf .gitlab-ci.yml
 
 # Stage 3 copy and prepare final image
-FROM node:alpine
+FROM node:15-alpine3.13
 
 WORKDIR /usr/src/app
 COPY --from=preparse /usr/src/app .
