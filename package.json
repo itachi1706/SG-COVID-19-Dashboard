@@ -52,7 +52,7 @@
     "firebase-auth": "^0.1.2",
     "google-charts": "^2.0.0",
     "helmet": "^4.6.0",
-    "http-errors": "~1.8.0",
+    "http-errors": "~1.8.1",
     "jquery": "^3.6.0",
     "json-2-csv": "^3.14.4",
     "moment": "^2.29.1",
