@@ -1,5 +1,4 @@
 require('firebase-auth');
-const firebase = require('firebase');
 const admin = require('firebase-admin');
 
 let firebaseConfig, dbConfig;
@@ -30,7 +29,7 @@ else {
     dbConfig = dev.db;
 }
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
 
-module.exports = { firebase, admin, firebaseConfig, dbConfig };
+module.exports = { admin, firebaseConfig, dbConfig };

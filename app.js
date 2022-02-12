@@ -40,6 +40,14 @@ app.use(helmet.contentSecurityPolicy({
 }));
 app.use(helmet.referrerPolicy({policy: 'same-origin'}));
 
+// set up rate limiter: maximum of 20 requests per 10 second
+var rateLimit = require('express-rate-limit');
+var limiter = rateLimit({
+  windowMs: 10*1000, // 10 seconds
+  max: 20
+});
+app.use(limiter);
+
 app.use(logger('dev'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.json());

@@ -21,8 +21,8 @@
   },
   "license": "UNLICENSED",
   "engines": {
-    "node": "12.18.2",
-    "npm": "6.14.5"
+    "node": "16.14.0",
+    "npm": "8.3.1"
   },
   "os": [
     "darwin",
@@ -46,6 +46,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~4.3.3",
     "express": "~4.17.1",
+    "express-rate-limit": "^6.2.1",
     "express-sslify": "^1.2.0",
     "firebase": "^9.6.6",
     "firebase-admin": "^10.0.0",
@@ -58,7 +59,7 @@
     "moment": "^2.29.1",
     "morgan": "~1.10.0",
     "mysql": "^2.18.1",
-    "node-sass-middleware": "0.11.0",
+    "node-sass-middleware": "github:sass/node-sass-middleware#8253c24428bf604e8cc44012f332af9258551aad",
     "pug": "^3.0.2",
     "serve-favicon": "^2.5.0",
     "shrink-ray-current": "^4.1.3",
