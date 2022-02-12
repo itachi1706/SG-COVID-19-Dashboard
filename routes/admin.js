@@ -197,11 +197,11 @@ router.post('/editDay/:day', async (req, res) => {
             updateClause += `${i}=${db.escape(modified[i])}, `;
     }
     updateClause = updateClause.trimEnd().replace(/,\s*$/, "");
-    let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=${day};`;
+    let updateSQL = `UPDATE ${dbConfig.infoTable} SET ${updateClause} WHERE Day=?;`;
     console.log(updateSQL);
     try {
         if (updateClause !== "") {
-            let updateRes = await db.query(updateSQL);
+            let updateRes = await db.query(updateSQL, [day]);
             console.log(`Updated ${updateRes.changedRows} rows in the database`);
         }
         if (!updateDelta) res.redirect(`/admin/editDay?updateVal=${day}`);

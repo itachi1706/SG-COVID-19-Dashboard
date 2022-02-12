@@ -58,7 +58,7 @@
     "json-2-csv": "^3.14.4",
     "moment": "^2.29.1",
     "morgan": "~1.10.0",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "node-sass-middleware": "github:sass/node-sass-middleware#8253c24428bf604e8cc44012f332af9258551aad",
     "pug": "^3.0.2",
     "serve-favicon": "^2.5.0",
