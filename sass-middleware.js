@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const sass = require('sass');
+const csso = require('csso');
 
 const cache = {}
 
@@ -15,10 +16,7 @@ module.exports = async function(req, res, next) {
   // cache rendered CSS in memory
   let rp = req.path;
   if (!cache[rp]) {
-    cache[rp] = sass.compile(file, {
-        includePaths: [path.join(process.cwd(), 'node_modules')],
-        outputStyle: (process.env.NODE_ENV === 'production') ? 'compressed' : 'expanded'
-    });
+    cache[rp] = sass.compile(file);
 
     // watch for changes in .sass
     fs.watchFile(file, _ => {
@@ -28,5 +26,5 @@ module.exports = async function(req, res, next) {
   }
 
   res.header('content-type', 'text/css');
-  res.send(cache[req.path].css.toString());
+  res.send((process.env.NODE_ENV) ? csso.minify(cache[req.path].css.toString()).css.toString() : cache[req.path].css.toString()); // Minify if production
 }
