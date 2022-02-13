@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const sassMiddleware = require('node-sass-middleware');
+const sass = require('./sass-middleware');
 const shrinkRay = require('shrink-ray-current');
 const favicon = require('serve-favicon');
 const enforceSSL = require('express-sslify');
@@ -54,12 +54,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(shrinkRay({brotli:{quality:6},filter:shrinkRay.filter})); // See Alorel/shrink-ray#52 for reason why we need filter
-app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
-  sourceMap: true
-}));
+app.use('/stylesheets', sass);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
