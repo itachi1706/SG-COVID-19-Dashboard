@@ -46,7 +46,7 @@
     "cookie-parser": "~1.4.6",
     "csso": "^5.0.2",
     "debug": "~4.3.3",
-    "express": "~4.17.1",
+    "express": "~4.17.3",
     "express-rate-limit": "^6.2.1",
     "express-sslify": "^1.2.0",
     "firebase": "^9.6.6",
