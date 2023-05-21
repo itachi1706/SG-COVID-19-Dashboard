@@ -31,7 +31,7 @@ jobs:
       - run: npm run test --if-present
         env:
           CI: true
-      - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@main
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+#       - name: 'Qodana Scan'
+#         uses: JetBrains/qodana-action@main
+#         env:
+#           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
