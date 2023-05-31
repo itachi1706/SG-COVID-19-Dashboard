@@ -50,7 +50,7 @@
     "express-rate-limit": "^6.7.0",
     "express-sslify": "^1.2.0",
     "firebase": "^9.22.0",
-    "firebase-admin": "^11.8.0",
+    "firebase-admin": "^11.9.0",
     "firebase-auth": "^0.1.2",
     "google-charts": "^2.0.0",
     "helmet": "^7.0.0",
