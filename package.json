@@ -61,7 +61,7 @@
     "morgan": "~1.10.0",
     "mysql2": "^3.6.0",
     "pug": "^3.0.2",
-    "sass": "^1.62.1",
+    "sass": "^1.67.0",
     "serve-favicon": "^2.5.0",
     "shrink-ray-without-zopfli": "^1.0.1",
     "uuid": "^9.0.0"
