@@ -1,5 +1,7 @@
 # SG COVID-19 Dashboard
 
+>⚠️ This service has since been stood down as it is no longer needed and APIs are no longer active ⚠️
+
 Singapore COVID-19 Dashboard
 
 View the publicly accessible site [here](https://covid19sg.itachi1706.com/)
